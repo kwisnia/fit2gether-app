@@ -12,7 +12,27 @@
         "react/prop-types": 0,
         "react/react-in-jsx-scope": 0,
         "@typescript-eslint/no-empty-function": 0,
-        "indent": ["error", 4]
+        "indent": ["error", 4],
+        "eqeqeq": ["error", "always"],
+        "yoda": ["error", "always"],
+        "prefer-regex-literals": "error",
+        "prefer-object-spread": "error",
+        "prefer-destructuring": ["error", { "object": true, "array": false }],
+        "prefer-const": [
+            "error",
+            {
+                "destructuring": "any",
+                "ignoreReadBeforeAssign": false
+            }
+        ],
+        "no-var": "error",
+        "prefer-arrow-callback": "error",
+        "no-return-await": "error",
+        "no-bitwise": "error",
+        "dot-notation": "error",
+        "camelcase": "error",
+        "no-unmodified-loop-condition": "error",
+        "no-duplicate-imports": "error"
     },
     "plugins": ["react", "import", "@typescript-eslint"],
     "parser": "@typescript-eslint/parser",
