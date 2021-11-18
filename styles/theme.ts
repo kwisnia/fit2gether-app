@@ -7,6 +7,18 @@ import {
     DefaultTheme as PaperDefaultTheme,
 } from "react-native-paper";
 
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace ReactNativePaper {
+        interface ThemeColors {
+            primaryLight: string;
+            primaryDark: string;
+            accentLight: string;
+            accentDark: string;
+        }
+    }
+}
+
 export const combinedDefaultTheme = {
     ...PaperDefaultTheme,
     ...NavigationDefaultTheme,
@@ -21,7 +33,7 @@ export const combinedDefaultTheme = {
         accentDark: "#ba2d65",
         //Not sure about those two
         surface: "#9b3e06",
-        background: "#ff9b61",
+        background: "#FFDFCD",
     },
 };
 

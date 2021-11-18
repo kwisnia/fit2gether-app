@@ -14,7 +14,7 @@
         "@typescript-eslint/no-empty-function": 0,
         "indent": ["error", 4],
         "eqeqeq": ["error", "always"],
-        "yoda": ["error", "always"],
+        "yoda": ["error", "never"],
         "prefer-regex-literals": "error",
         "prefer-object-spread": "error",
         "prefer-destructuring": ["error", { "object": true, "array": false }],

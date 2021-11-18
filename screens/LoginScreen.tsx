@@ -1,24 +1,24 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import {
-    ActivityIndicator,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-} from "react-native";
+import { StyleSheet, View, Image, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types/RootStackParamList";
+import { useTheme, Surface } from "react-native-paper";
+import LoginSurface from "../components/login/LoginSurface";
+import LoginRegisterSelector from "../components/login/LoginRegisterSelector";
+import RegisterSurface from "../components/login/RegisterSurface";
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
     RootStackParamList,
     "Login"
 >;
 
+type formType = "login" | "register";
+
 const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
-    const [inputUsername, setInputUsername] = React.useState("");
-    const [inputPassword, setInputPassword] = React.useState("");
+    const theme = useTheme();
     const [isWaiting, setIsWaiting] = React.useState(false);
+    const [formType, setFormType] = React.useState<formType>("login");
 
     const login = async () => {
         setIsWaiting(true);
@@ -28,41 +28,34 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.header}>Login</Text>
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                placeholder="Username"
-                value={inputUsername}
-                onChangeText={(text: string) => setInputUsername(text)}
-            />
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                secureTextEntry={true}
-                placeholder="Password"
-                value={inputPassword}
-                onChangeText={(text: string) => setInputPassword(text)}
-            />
-            {!isWaiting ? (
-                <Pressable
-                    style={({ pressed }) => [
-                        {
-                            opacity: pressed ? 0.4 : 1,
-                        },
-                        styles.loginButton,
+        <ScrollView contentInsetAdjustmentBehavior="automatic">
+            <SafeAreaView style={styles.container}>
+                <View style={styles.logoContainer}>
+                    <Image
+                        style={styles.logo}
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        source={require("../assets/f2g_logo.png")}
+                    />
+                </View>
+                <Text style={styles.title}>Fit2Gether</Text>
+                <LoginRegisterSelector
+                    formType={formType}
+                    setFormType={setFormType}
+                />
+                <Surface
+                    style={[
+                        { backgroundColor: theme.colors.background },
+                        styles.surface,
                     ]}
-                    onPress={() => {
-                        void login();
-                    }}
                 >
-                    <Text style={styles.loginButtonText}>Login</Text>
-                </Pressable>
-            ) : (
-                <ActivityIndicator color="#ee4266ff" size={55} />
-            )}
-        </SafeAreaView>
+                    {formType === "login" ? (
+                        <LoginSurface login={login} />
+                    ) : (
+                        <RegisterSurface />
+                    )}
+                </Surface>
+            </SafeAreaView>
+        </ScrollView>
     );
 };
 
@@ -71,36 +64,25 @@ export default LoginScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#2F2F2F",
         alignItems: "stretch",
         justifyContent: "flex-start",
     },
-    header: {
-        color: "#ee4266ff",
-        fontSize: 28,
-        fontWeight: "400",
-        textAlign: "center",
-        padding: 10,
-        marginTop: 10,
-    },
-    input: {
-        backgroundColor: "#fcc89bff",
-        padding: 13,
-        marginVertical: 4,
-        marginHorizontal: 20,
-        flexDirection: "row",
+    logoContainer: {
         alignItems: "center",
-        alignContent: "center",
+        marginVertical: 30,
     },
-    loginButton: {
-        backgroundColor: "#ee4266ff",
+    logo: {
+        marginHorizontal: 50,
+    },
+    title: {
+        fontSize: 45,
+        marginBottom: 30,
+        fontWeight: "bold",
         alignSelf: "center",
-        padding: 7,
-        margin: 10,
-        flexDirection: "row",
     },
-    loginButtonText: {
-        color: "#fcc89bff",
-        fontSize: 20,
+    surface: {
+        marginHorizontal: 10,
+        paddingHorizontal: 50,
+        paddingVertical: 30,
     },
 });
