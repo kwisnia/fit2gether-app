@@ -17,7 +17,7 @@ type formType = "login" | "register";
 
 const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     const theme = useTheme();
-    const [isWaiting, setIsWaiting] = React.useState(false);
+    const [, setIsWaiting] = React.useState(false);
     const [formType, setFormType] = React.useState<formType>("login");
 
     const login = async () => {
