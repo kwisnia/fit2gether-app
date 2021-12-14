@@ -3,17 +3,18 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Provider as PaperProvider } from "react-native-paper";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { Provider as PaperProvider, useTheme } from "react-native-paper";
 import { combinedDefaultTheme, combinedDarkTheme } from "./styles/theme";
 import { ThemeContext } from "./context/ThemeContext";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import NavAppBar from "./components/NavAppBar";
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 // Placeholder
-function HomeScreen() {
+function CalendarScreen() {
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -23,7 +24,7 @@ function HomeScreen() {
     );
 }
 
-function SettingsScreen() {
+function TasksScreen() {
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -32,17 +33,77 @@ function SettingsScreen() {
         </View>
     );
 }
+
+function ProgressScreen() {
+    return (
+        <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+            <Text>Progress!</Text>
+        </View>
+    );
+}
 // Placeholder
 
 const MainTabNavigator = () => {
+    const theme = useTheme();
+    const { isThemeDark } = React.useContext(ThemeContext);
+
     return (
         <Tab.Navigator
-            screenOptions={{
-                header: (props) => <NavAppBar {...props} />,
-            }}
+            shifting={true}
+            inactiveColor="white"
+            activeColor={
+                isThemeDark ? theme.colors.accentDark : theme.colors.accentLight
+            }
+            // screenOptions={
+            //     {
+            //         header: (props) => <NavAppBar {...props} />,
+            //     }
+            // }
         >
-            <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
+            <Tab.Screen
+                name="Calendar"
+                component={CalendarScreen}
+                options={{
+                    tabBarLabel: "Calendar",
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons
+                            name="calendar-blank"
+                            color={color}
+                            size={26}
+                        />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Tasks"
+                component={TasksScreen}
+                options={{
+                    tabBarLabel: "Tasks",
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons
+                            name="clipboard-list-outline"
+                            color={color}
+                            size={26}
+                        />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Progress"
+                component={ProgressScreen}
+                options={{
+                    tabBarLabel: "Progress",
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons
+                            name="trending-up"
+                            color={color}
+                            size={26}
+                        />
+                    ),
+                }}
+            />
         </Tab.Navigator>
     );
 };
@@ -75,7 +136,8 @@ const App = () => {
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator
                         screenOptions={{
-                            headerShown: false,
+                            // headerShown: false,
+                            header: (props) => <NavAppBar {...props} />,
                         }}
                         initialRouteName="Login"
                     >

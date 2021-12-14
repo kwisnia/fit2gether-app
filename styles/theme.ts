@@ -50,7 +50,8 @@ export const combinedDarkTheme = {
         accentLight: "#ff7595",
         accentDark: "#a3003d",
         //Not sure about those two
-        surface: "#742800",
+        // surface: "#742800",
+        surface: "#121212",
         background: "#de8253",
     },
 };

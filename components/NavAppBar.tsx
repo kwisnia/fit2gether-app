@@ -11,11 +11,11 @@ const NavAppBar: React.FunctionComponent<BottomTabHeaderProps> = ({
 
     return (
         <Appbar.Header
-            theme={{
-                colors: {
-                    primary: theme?.colors.surface,
-                },
-            }}
+        // theme={{
+        //     colors: {
+        //         primary: theme?.colors.surface,
+        //     },
+        // }}
         >
             <Appbar.Content title={route.name} />
             <Switch
