@@ -8,6 +8,7 @@ import {
     NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/RootStackParamList";
+import DrawerNavigator from "./DrawerNavigation";
 
 LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state",
@@ -97,6 +98,7 @@ const TabNavigator = () => {
                 component={Tabs}
                 initialParams={{ setTitle }}
             />
+            <Stack.Screen name="Drawer" component={DrawerNavigator} />
         </Stack.Navigator>
     );
 };

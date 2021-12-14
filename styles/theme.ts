@@ -52,6 +52,6 @@ export const combinedDarkTheme = {
         //Not sure about those two
         // surface: "#742800",
         surface: "#121212",
-        background: "#de8253",
+        background: "#121212",
     },
 };
