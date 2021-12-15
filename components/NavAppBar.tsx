@@ -1,25 +1,21 @@
 import React from "react";
-import { Appbar, useTheme, Switch, Avatar } from "react-native-paper";
-import { ThemeContext } from "../context/ThemeContext";
+import { Appbar, Avatar } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
+type DrawerNavigationProp = {
+    openDrawer: () => void;
+};
+
 const NavAppBar: React.FunctionComponent<{ title: string }> = ({ title }) => {
-    const theme = useTheme();
-    const navigation = useNavigation();
-    const { toggleTheme, isThemeDark } = React.useContext(ThemeContext);
+    const navigation = useNavigation<DrawerNavigationProp>();
 
     return (
         <Appbar.Header>
-            <Switch
-                color={theme.colors.accent}
-                value={isThemeDark}
-                onValueChange={toggleTheme}
-            />
             <TouchableOpacity
                 onPress={() => {
-                    navigation.openDrawer(); // pomocy, nie wiem jak to otypowac
+                    navigation.openDrawer();
                 }}
             >
                 <Avatar.Image
