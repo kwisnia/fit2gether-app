@@ -5,6 +5,7 @@ import NavAppBar from "../components/NavAppBar";
 import { ThemeContext } from "../context/ThemeContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CalendarScreen from "../screens/CalendarScreen";
+import TasksScreen from "../screens/TasksScreen";
 import { TabContext } from "../context/TabContext";
 
 LogBox.ignoreLogs([
@@ -12,17 +13,6 @@ LogBox.ignoreLogs([
 ]);
 
 const Stack = createNativeStackNavigator();
-
-function TasksScreen() {
-    return (
-        <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-            <Text>Tasks!</Text>
-        </View>
-    );
-}
-
 function ProgressScreen() {
     return (
         <View

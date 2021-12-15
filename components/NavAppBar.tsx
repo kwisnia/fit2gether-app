@@ -17,6 +17,7 @@ const NavAppBar: React.FunctionComponent<{ title: string }> = ({ title }) => {
                 onPress={() => {
                     navigation.openDrawer();
                 }}
+                style={styles.left}
             >
                 <Avatar.Image
                     size={50}
@@ -39,6 +40,9 @@ const styles = StyleSheet.create({
         position: "absolute",
         right: 0,
         marginRight: 10,
+    },
+    left: {
+        marginLeft: 10,
     },
 });
 
