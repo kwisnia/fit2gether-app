@@ -19,7 +19,7 @@ const Task: React.FunctionComponent<{ task: TaskType }> = ({ task }) => {
     const [isFocused, setIsFocused] = React.useState(false);
     const [title, setTitle] = React.useState(task.name);
     const [category, setCategory] = React.useState(
-        CATEGORIES[task.categoryId].value
+        CATEGORIES[task.category.id].value
     );
     const theme = useTheme();
 

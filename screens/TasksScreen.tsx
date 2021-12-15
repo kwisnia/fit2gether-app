@@ -9,21 +9,30 @@ const TASKS: TaskType[] = [
         name: "Yoga",
         date: "23-11-2021",
         userId: 2,
-        categoryId: 0,
+        category: {
+            id: 0,
+            name: "Exercise",
+        },
     },
     {
         id: 1,
         name: "Gym",
         date: "23-11-2021",
         userId: 1,
-        categoryId: 0,
+        category: {
+            id: 0,
+            name: "Exercise",
+        },
     },
     {
         id: 2,
         name: "2L of water",
         date: "23-11-2021",
         userId: 2,
-        categoryId: 1,
+        category: {
+            id: 1,
+            name: "Nutrition",
+        },
     },
 ];
 

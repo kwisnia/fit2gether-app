@@ -3,5 +3,8 @@ export interface Task {
     name: string;
     date: string;
     userId: number;
-    categoryId: number;
+    category: {
+        id: number;
+        name: string;
+    };
 }

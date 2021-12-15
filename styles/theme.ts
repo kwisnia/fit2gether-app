@@ -43,9 +43,9 @@ export const combinedDarkTheme = {
     colors: {
         ...PaperDarkTheme.colors,
         ...NavigationDarkTheme.colors,
-        primary: "#a85428",
-        primaryLight: "#de8253",
-        primaryDark: "#742800",
+        primary: "#301F16",
+        primaryLight: "#241A15",
+        primaryDark: "#1F1714",
         accent: "#da4167",
         accentLight: "#ff7595",
         accentDark: "#a3003d",
