@@ -9,23 +9,13 @@ import {
 } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/RootStackParamList";
 import DrawerNavigator from "./DrawerNavigation";
+import CalendarScreen from "../screens/CalendarScreen";
 
 LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state",
 ]);
 
 const Stack = createNativeStackNavigator();
-
-// Placeholder
-function CalendarScreen() {
-    return (
-        <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-            <Text>Home!</Text>
-        </View>
-    );
-}
 
 function TasksScreen() {
     return (
@@ -98,7 +88,6 @@ const TabNavigator = () => {
                 component={Tabs}
                 initialParams={{ setTitle }}
             />
-            <Stack.Screen name="Drawer" component={DrawerNavigator} />
         </Stack.Navigator>
     );
 };
