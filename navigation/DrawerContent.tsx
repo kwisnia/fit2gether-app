@@ -8,13 +8,14 @@ import {
 import { Avatar, Title, Caption, Drawer, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
+import { TabContext } from "../context/TabContext";
 
 const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     props
 ) => {
     const { isThemeDark, toggleTheme } = React.useContext(ThemeContext);
     const theme = useTheme();
-    const [active, setActive] = React.useState("");
+    const { tab: active, setTab: setActive } = React.useContext(TabContext);
     const itemStyle = {
         activeTintColor: "white",
         activeBackgroundColor: theme.colors.accent,
@@ -68,10 +69,10 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Buddy system"
-                    focused={active === "plz"}
+                    focused={active === "Buddy System"}
                     onPress={() => {
-                        setActive("plz");
-                        props.navigation.navigate("Plz");
+                        setActive("Buddy System");
+                        props.navigation.navigate("TabNavigator");
                     }}
                     labelStyle={styles.drawerItem}
                     {...itemStyle}
@@ -85,8 +86,10 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Calendar"
+                    focused={active === "Calendar"}
                     onPress={() => {
-                        props.navigation.navigate("Plz");
+                        setActive("Calendar");
+                        props.navigation.navigate("TabNavigator");
                     }}
                     {...itemStyle}
                 />
@@ -99,8 +102,10 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Tasks"
+                    focused={active === "Tasks"}
                     onPress={() => {
-                        props.navigation.navigate("Plz");
+                        setActive("Tasks");
+                        props.navigation.navigate("TabNavigator");
                     }}
                     {...itemStyle}
                 />
@@ -113,8 +118,10 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Progress"
+                    focused={active === "Progress"}
                     onPress={() => {
-                        props.navigation.navigate("Plz");
+                        setActive("Progress");
+                        props.navigation.navigate("TabNavigator");
                     }}
                     {...itemStyle}
                 />
@@ -150,7 +157,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     )}
                     label="Settings"
                     onPress={() => {
-                        props.navigation.navigate("Plz");
+                        props.navigation.navigate("TabNavigator");
                     }}
                     {...itemStyle}
                 />

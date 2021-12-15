@@ -3,13 +3,9 @@ import { BottomNavigation, useTheme } from "react-native-paper";
 import { View, Text, LogBox } from "react-native";
 import NavAppBar from "../components/NavAppBar";
 import { ThemeContext } from "../context/ThemeContext";
-import {
-    createNativeStackNavigator,
-    NativeStackScreenProps,
-} from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/RootStackParamList";
-import DrawerNavigator from "./DrawerNavigation";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CalendarScreen from "../screens/CalendarScreen";
+import { TabContext } from "../context/TabContext";
 
 LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state",
@@ -22,7 +18,7 @@ function TasksScreen() {
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-            <Text>Settings!</Text>
+            <Text>Tasks!</Text>
         </View>
     );
 }
@@ -38,13 +34,8 @@ function ProgressScreen() {
 }
 // Placeholder
 
-type TabsScreenNavigationProp = NativeStackScreenProps<
-    RootStackParamList,
-    "Tabs"
->;
-
-const Tabs = ({ route }: TabsScreenNavigationProp) => {
-    const { setTitle } = route.params;
+const Tabs = () => {
+    const { tab, setTab } = React.useContext(TabContext);
     const theme = useTheme();
     const { isThemeDark } = React.useContext(ThemeContext);
     const [index, setIndex] = React.useState(0);
@@ -59,12 +50,19 @@ const Tabs = ({ route }: TabsScreenNavigationProp) => {
         progress: ProgressScreen,
     });
 
+    React.useEffect(() => {
+        const index = routes.findIndex((route) => route.title === tab);
+        if (index !== -1) {
+            setIndex(index);
+        }
+    }, [tab, routes]);
+
     return (
         <BottomNavigation
             navigationState={{ index, routes }}
             onIndexChange={setIndex}
             renderScene={renderScene}
-            onTabPress={({ route }) => setTitle(route.title)}
+            onTabPress={({ route }) => setTab(route.title || "")}
             shifting={true}
             inactiveColor="white"
             activeColor={
@@ -75,19 +73,15 @@ const Tabs = ({ route }: TabsScreenNavigationProp) => {
 };
 
 const TabNavigator = () => {
-    const [title, setTitle] = React.useState("Calendar");
+    const { tab } = React.useContext(TabContext);
 
     return (
         <Stack.Navigator
             screenOptions={{
-                header: () => <NavAppBar title={title} />,
+                header: () => <NavAppBar title={tab} />,
             }}
         >
-            <Stack.Screen
-                name="Tabs"
-                component={Tabs}
-                initialParams={{ setTitle }}
-            />
+            <Stack.Screen name="Tabs" component={Tabs} />
         </Stack.Navigator>
     );
 };
