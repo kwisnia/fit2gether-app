@@ -168,6 +168,9 @@ const NewTask: React.FunctionComponent<{
                         <Pressable
                             onPress={async () => {
                                 await refresh();
+                                setDate(undefined);
+                                setTitle("");
+                                setCategory("");
                                 setIsFocused(false);
                             }}
                         >
