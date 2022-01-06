@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useTheme, Surface, TextInput } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { Task as TaskType } from "../../types/Task";
 import { Category as CategoryType } from "../../types/Category";
 import RNPickerSelect from "react-native-picker-select";
 import { DatePickerModal } from "react-native-paper-dates";
@@ -10,21 +9,19 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-const Task: React.FunctionComponent<{
-    task: TaskType;
+const NewTask: React.FunctionComponent<{
+    refresh: () => Promise<void>;
     categories: CategoryType[];
-}> = ({ task, categories }) => {
+}> = ({ refresh, categories }) => {
     const [isFocused, setIsFocused] = React.useState(false);
-    const [date, setDate] = React.useState(dayjs(task.date, "DD-MM-YYYY"));
+    const [date, setDate] = React.useState<Date | undefined>(undefined);
     const [showDatePicker, setShowDatePicker] = React.useState(false);
-    const [title, setTitle] = React.useState(task.name);
-    const [category, setCategory] = React.useState(
-        categories[task.category.id].value
-    );
+    const [title, setTitle] = React.useState("");
+    const [category, setCategory] = React.useState("");
     const theme = useTheme();
 
     const getColorBasedOnFocus = (focused: boolean) => {
-        return focused ? theme.colors.primary : theme.colors.primaryDark;
+        return focused ? theme.colors.accent : theme.colors.accentDark;
     };
 
     return (
@@ -35,17 +32,17 @@ const Task: React.FunctionComponent<{
                         styles.container,
                         {
                             backgroundColor: isFocused
-                                ? theme.colors.primaryDark
-                                : theme.colors.primary,
+                                ? theme.colors.accentDark
+                                : theme.colors.accent,
                         },
                     ]}
                 >
                     <MaterialCommunityIcons
-                        name="account-outline"
-                        color={task.userId === 2 ? "#C4D149" : "#EDD3CE"}
+                        name="open-in-new"
+                        color={theme.colors.primaryDark}
                         size={40}
                     />
-                    <Text style={styles.taskTitle}>{task.name}</Text>
+                    <Text style={styles.taskTitle}>Add new task</Text>
                 </Surface>
             </Pressable>
             {isFocused ? (
@@ -54,7 +51,7 @@ const Task: React.FunctionComponent<{
                         styles.container,
                         {
                             marginTop: 0,
-                            backgroundColor: theme.colors.primaryLight,
+                            backgroundColor: theme.colors.accentLight,
                             flex: 1,
                             flexDirection: "column",
                         },
@@ -64,7 +61,7 @@ const Task: React.FunctionComponent<{
                         <TextInput
                             style={[
                                 styles.input,
-                                { backgroundColor: theme.colors.primaryLight },
+                                { backgroundColor: theme.colors.accentLight },
                             ]}
                             left={
                                 <TextInput.Icon
@@ -76,7 +73,8 @@ const Task: React.FunctionComponent<{
                             autoCapitalize="none"
                             placeholder="Title"
                             label="Title"
-                            outlineColor={theme.colors.primaryDark}
+                            outlineColor={theme.colors.accentDark}
+                            activeOutlineColor={theme.colors.accent}
                             dense
                             value={title}
                             onChangeText={(text: string) => setTitle(text)}
@@ -93,7 +91,8 @@ const Task: React.FunctionComponent<{
                                     styles.input,
                                     {
                                         backgroundColor:
-                                            theme.colors.primaryLight,
+                                            theme.colors.accentLight,
+                                        minWidth: 150,
                                     },
                                 ]}
                                 left={
@@ -113,7 +112,7 @@ const Task: React.FunctionComponent<{
                                 autoCapitalize="none"
                                 placeholder="Category"
                                 label="Category"
-                                outlineColor={theme.colors.primaryDark}
+                                outlineColor={theme.colors.accentDark}
                                 dense
                                 value={category}
                             />
@@ -129,8 +128,7 @@ const Task: React.FunctionComponent<{
                                         styles.input,
                                         {
                                             backgroundColor:
-                                                theme.colors.primaryLight,
-                                            minWidth: 150,
+                                                theme.colors.accentLight,
                                         },
                                     ]}
                                     left={
@@ -144,9 +142,13 @@ const Task: React.FunctionComponent<{
                                     autoCapitalize="none"
                                     placeholder="Category"
                                     label="Date"
-                                    outlineColor={theme.colors.primaryDark}
+                                    outlineColor={theme.colors.accentDark}
                                     dense
-                                    value={date.format("DD-MM-YYYY")}
+                                    value={
+                                        date
+                                            ? dayjs(date).format("DD-MM-YYYY")
+                                            : ""
+                                    }
                                 />
                             </View>
                             <DatePickerModal
@@ -154,25 +156,23 @@ const Task: React.FunctionComponent<{
                                 mode="single"
                                 visible={showDatePicker}
                                 onDismiss={() => setShowDatePicker(false)}
-                                date={date.toDate()}
+                                date={date}
                                 onConfirm={({ date }) => {
                                     setShowDatePicker(false);
-                                    setDate(dayjs(date));
+                                    setDate(date);
                                 }}
                             />
                         </Pressable>
                     </View>
                     <View style={styles.controls}>
-                        <Pressable>
+                        <Pressable
+                            onPress={async () => {
+                                await refresh();
+                                setIsFocused(false);
+                            }}
+                        >
                             <MaterialCommunityIcons
                                 name="checkbox-marked-circle-outline"
-                                color={theme.colors.primaryDark}
-                                size={40}
-                            />
-                        </Pressable>
-                        <Pressable>
-                            <MaterialCommunityIcons
-                                name="delete-forever"
                                 color={theme.colors.accentDark}
                                 size={40}
                             />
@@ -214,4 +214,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Task;
+export default NewTask;
