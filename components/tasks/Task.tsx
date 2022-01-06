@@ -4,6 +4,10 @@ import { useTheme, Surface, TextInput } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Task as TaskType } from "../../types/Task";
 import RNPickerSelect from "react-native-picker-select";
+import { DatePickerModal } from "react-native-paper-dates";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 const CATEGORIES = [
     {
@@ -18,6 +22,8 @@ const CATEGORIES = [
 
 const Task: React.FunctionComponent<{ task: TaskType }> = ({ task }) => {
     const [isFocused, setIsFocused] = React.useState(false);
+    const [date, setDate] = React.useState(dayjs(task.date, "DD-MM-YYYY"));
+    const [showDatePicker, setShowDatePicker] = React.useState(false);
     const [title, setTitle] = React.useState(task.name);
     const [category, setCategory] = React.useState(
         CATEGORIES[task.category.id].value
@@ -56,6 +62,8 @@ const Task: React.FunctionComponent<{ task: TaskType }> = ({ task }) => {
                         {
                             marginTop: 0,
                             backgroundColor: theme.colors.primaryLight,
+                            flex: 1,
+                            flexDirection: "column",
                         },
                     ]}
                 >
@@ -114,11 +122,56 @@ const Task: React.FunctionComponent<{ task: TaskType }> = ({ task }) => {
                                 outlineColor={theme.colors.primaryDark}
                                 dense
                                 value={category}
-                                onChangeText={(text: string) =>
-                                    setCategory(text)
-                                }
                             />
                         </RNPickerSelect>
+                    </View>
+                    <View>
+                        <Pressable
+                            onPress={() => setShowDatePicker(!showDatePicker)}
+                        >
+                            <View pointerEvents="none">
+                                <TextInput
+                                    style={[
+                                        styles.input,
+                                        {
+                                            backgroundColor:
+                                                theme.colors.primaryLight,
+                                        },
+                                    ]}
+                                    left={
+                                        <TextInput.Icon
+                                            name="calendar-blank"
+                                            color={getColorBasedOnFocus}
+                                        />
+                                    }
+                                    right={
+                                        <TextInput.Icon
+                                            name="menu-down"
+                                            color={getColorBasedOnFocus}
+                                        />
+                                    }
+                                    editable={false}
+                                    mode="outlined"
+                                    autoCapitalize="none"
+                                    placeholder="Category"
+                                    label="Date"
+                                    outlineColor={theme.colors.primaryDark}
+                                    dense
+                                    value={date.format("DD-MM-YYYY")}
+                                />
+                            </View>
+                            <DatePickerModal
+                                locale="en-GB"
+                                mode="single"
+                                visible={showDatePicker}
+                                onDismiss={() => setShowDatePicker(false)}
+                                date={date.toDate()}
+                                onConfirm={({ date }) => {
+                                    setShowDatePicker(false);
+                                    setDate(dayjs(date));
+                                }}
+                            />
+                        </Pressable>
                     </View>
                 </Surface>
             ) : null}
@@ -146,6 +199,7 @@ const styles = StyleSheet.create({
     inputRow: {
         flexDirection: "row",
         justifyContent: "space-around",
+        width: "100%",
         flex: 1,
     },
 });

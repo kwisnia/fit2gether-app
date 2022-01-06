@@ -5,6 +5,9 @@ import { combinedDefaultTheme, combinedDarkTheme } from "./styles/theme";
 import { ThemeContext } from "./context/ThemeContext";
 import { TabContext } from "./context/TabContext";
 import DrawerNavigator from "./navigation/DrawerNavigation";
+import { enGB, registerTranslation } from "react-native-paper-dates";
+
+registerTranslation("en-GB", enGB);
 
 const App = () => {
     const [isThemeDark, setIsThemeDark] = React.useState(false);
