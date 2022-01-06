@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useTheme, Surface, TextInput } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Task as TaskType } from "../../types/Task";
+import RNPickerSelect from "react-native-picker-select";
 
 const CATEGORIES = [
     {
@@ -79,7 +80,12 @@ const Task: React.FunctionComponent<{ task: TaskType }> = ({ task }) => {
                             value={title}
                             onChangeText={(text: string) => setTitle(text)}
                         />
-                        <Pressable>
+                        <RNPickerSelect
+                            onValueChange={(value: string) =>
+                                setCategory(value)
+                            }
+                            items={CATEGORIES}
+                        >
                             <TextInput
                                 style={[
                                     styles.input,
@@ -112,7 +118,7 @@ const Task: React.FunctionComponent<{ task: TaskType }> = ({ task }) => {
                                     setCategory(text)
                                 }
                             />
-                        </Pressable>
+                        </RNPickerSelect>
                     </View>
                 </Surface>
             ) : null}
