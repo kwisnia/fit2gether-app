@@ -1,6 +1,12 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
-import { useTheme, Surface, TextInput } from "react-native-paper";
+import {
+    useTheme,
+    Surface,
+    TextInput,
+    Portal,
+    Modal,
+} from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Task as TaskType } from "../../types/Task";
 import { Category as CategoryType } from "../../types/Category";
@@ -8,6 +14,8 @@ import RNPickerSelect from "react-native-picker-select";
 import { DatePickerModal } from "react-native-paper-dates";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import CompletedModalContent from "./CompletedModalContent";
+import DurationModalContent from "./DurationModalContent";
 dayjs.extend(customParseFormat);
 
 const Task: React.FunctionComponent<{
@@ -15,6 +23,11 @@ const Task: React.FunctionComponent<{
     categories: CategoryType[];
 }> = ({ task, categories }) => {
     const [isFocused, setIsFocused] = React.useState(false);
+    const [completedModalVisible, setCompletedModalVisible] =
+        React.useState(false);
+    const [durationModalVisible, setDurationModalVisible] =
+        React.useState(false);
+    const [duration, setDuration] = React.useState(0);
     const [date, setDate] = React.useState(dayjs(task.date, "DD-MM-YYYY"));
     const [showDatePicker, setShowDatePicker] = React.useState(false);
     const [title, setTitle] = React.useState(task.name);
@@ -29,6 +42,24 @@ const Task: React.FunctionComponent<{
 
     return (
         <View>
+            <Portal>
+                <Modal
+                    visible={completedModalVisible}
+                    onDismiss={() => setCompletedModalVisible(false)}
+                >
+                    <CompletedModalContent exp={40} />
+                </Modal>
+                <Modal visible={durationModalVisible} dismissable={false}>
+                    <DurationModalContent
+                        duration={duration}
+                        setDuration={setDuration}
+                        dismiss={() => {
+                            setDurationModalVisible(false);
+                            setCompletedModalVisible(true);
+                        }}
+                    />
+                </Modal>
+            </Portal>
             <Pressable onPress={() => setIsFocused(!isFocused)}>
                 <Surface
                     style={[
@@ -162,21 +193,34 @@ const Task: React.FunctionComponent<{
                             />
                         </Pressable>
                     </View>
-                    <View style={styles.controls}>
-                        <Pressable>
-                            <MaterialCommunityIcons
-                                name="checkbox-marked-circle-outline"
-                                color={theme.colors.primaryDark}
-                                size={40}
-                            />
-                        </Pressable>
-                        <Pressable>
-                            <MaterialCommunityIcons
-                                name="delete-forever"
-                                color={theme.colors.accentDark}
-                                size={40}
-                            />
-                        </Pressable>
+                    <View style={styles.controlsRow}>
+                        <View>
+                            <Pressable
+                                onPress={() => setDurationModalVisible(true)}
+                            >
+                                <MaterialCommunityIcons
+                                    name="checkbox-marked-circle-outline"
+                                    color={theme.colors.primaryDark}
+                                    size={40}
+                                />
+                            </Pressable>
+                        </View>
+                        <View style={styles.controls}>
+                            <Pressable>
+                                <MaterialCommunityIcons
+                                    name="content-save"
+                                    color={theme.colors.primaryDark}
+                                    size={40}
+                                />
+                            </Pressable>
+                            <Pressable>
+                                <MaterialCommunityIcons
+                                    name="delete-forever"
+                                    color={theme.colors.accentDark}
+                                    size={40}
+                                />
+                            </Pressable>
+                        </View>
                     </View>
                 </Surface>
             ) : null}
@@ -208,10 +252,12 @@ const styles = StyleSheet.create({
         width: "100%",
         flex: 1,
     },
-    controls: {
+    controlsRow: {
         flexDirection: "row",
-        marginLeft: "auto",
+        width: "100%",
+        justifyContent: "space-between",
     },
+    controls: { flexDirection: "row" },
 });
 
 export default Task;
