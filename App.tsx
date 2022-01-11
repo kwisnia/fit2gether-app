@@ -3,7 +3,14 @@ import "intl";
 import "intl/locale-data/jsonp/en";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider as PaperProvider } from "react-native-paper";
-import { combinedDefaultTheme, combinedDarkTheme } from "./styles/theme";
+import {
+    combinedDefaultTheme,
+    combinedDarkTheme,
+    combinedLightPinkTheme,
+    combinedDarkPineTheme,
+    combinedLightBoyWhoLivedTheme,
+    combinedLightPowderTheme,
+} from "./styles/theme";
 import { ThemeContext } from "./context/ThemeContext";
 import { TabContext } from "./context/TabContext";
 import DrawerNavigator from "./navigation/DrawerNavigation";
