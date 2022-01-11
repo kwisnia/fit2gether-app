@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from "axios";
 import React from "react";
 import { ScrollView } from "react-native";
 import FitCalendar from "../components/calendar/Calendar";
@@ -7,29 +8,21 @@ const CalendarScreen: React.FunctionComponent = () => {
     const [selectedDay, setSelectedDay] = React.useState(
         new Date().toISOString().split("T")[0]
     );
-    // Placeholder
-    const [selectedDayTasks] = React.useState<Task[]>([
-        {
-            id: 1,
-            name: "Yoga",
-            userId: 4,
-            date: "2021-12-15",
-            category: {
-                id: 1,
-                name: "Exercise",
-            },
-        },
-        {
-            id: 2,
-            name: "Yoga2",
-            userId: 5,
-            date: "2021-12-15",
-            category: {
-                id: 1,
-                name: "Exercise",
-            },
-        },
-    ]);
+    const [selectedDayTasks, setSelectedDayTasks] = React.useState<Task[]>([]);
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    React.useEffect(() => {
+        const fetchSelectedDayTasks = async () => {
+            const tasks: AxiosResponse<Task[]> = await axios.get(
+                `/tasks?from=${selectedDay}&to=${selectedDay}`
+            );
+            setSelectedDayTasks(tasks.data);
+            setIsLoading(false);
+        };
+        setIsLoading(true);
+        void fetchSelectedDayTasks();
+    }, [selectedDay]);
+
     return (
         <ScrollView>
             <FitCalendar
@@ -39,6 +32,7 @@ const CalendarScreen: React.FunctionComponent = () => {
             <DayTasks
                 selectedDate={selectedDay}
                 selectedDayTasks={selectedDayTasks}
+                isLoading={isLoading}
             />
         </ScrollView>
     );

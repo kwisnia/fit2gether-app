@@ -1,17 +1,35 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { useTheme, TextInput, Button } from "react-native-paper";
+import zxcvbn from "zxcvbn";
 
-const RegisterSurface = () => {
+interface RegisterProps {
+    register(
+        username: string,
+        email: string,
+        password: string,
+        repeatInputPassword: string
+    ): void;
+}
+
+const RegisterSurface: React.FunctionComponent<RegisterProps> = ({
+    register,
+}) => {
     const [inputUsername, setInputUsername] = React.useState("");
     const [inputEmail, setInputEmail] = React.useState("");
     const [inputPassword, setInputPassword] = React.useState("");
     const [repeatInputPassword, setRepeatInputPassword] = React.useState("");
+    const [safety, setSafety] = React.useState(0);
+
     const theme = useTheme();
 
     const getColorBasedOnFocus = (focused: boolean) => {
         return focused ? theme.colors.primary : theme.colors.primaryLight;
     };
+
+    React.useEffect(() => {
+        setSafety(zxcvbn(inputPassword).score as number); //eslint-disable-line
+    }, [inputPassword]);
 
     return (
         <View>
@@ -64,6 +82,9 @@ const RegisterSurface = () => {
                 value={inputPassword}
                 onChangeText={(text: string) => setInputPassword(text)}
             />
+            {inputPassword.length === 0 || safety > 1 ? null : (
+                <Text>The password is too weak.</Text>
+            )}
             <TextInput
                 style={styles.input}
                 left={
@@ -79,11 +100,23 @@ const RegisterSurface = () => {
                 value={repeatInputPassword}
                 onChangeText={(text: string) => setRepeatInputPassword(text)}
             />
+            {repeatInputPassword.length ||
+            inputPassword === repeatInputPassword ? null : (
+                    <Text>Passwords are different.</Text>
+                )}
             <Button
                 mode="contained"
                 labelStyle={{ color: "white", fontSize: 18 }}
                 color={theme.colors.accent}
                 style={styles.button}
+                onPress={() =>
+                    register(
+                        inputUsername,
+                        inputEmail,
+                        inputPassword,
+                        repeatInputPassword
+                    )
+                }
             >
                 Register
             </Button>

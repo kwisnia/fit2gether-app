@@ -9,6 +9,9 @@ import { Avatar, Title, Caption, Drawer, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
 import { TabContext } from "../context/TabContext";
+import * as SecureStore from "expo-secure-store";
+import useSession from "../hooks/useSession";
+import { useIsFocused } from "@react-navigation/native";
 
 const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     props
@@ -20,6 +23,19 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
         activeTintColor: "white",
         activeBackgroundColor: theme.colors.accent,
         inactiveTintColor: isThemeDark ? "white" : theme.colors.primaryDark,
+    };
+    const [sessionInfo, refreshSessionInfo] = useSession();
+    const isFocused = useIsFocused();
+
+    React.useEffect(() => {
+        if (isFocused) {
+            refreshSessionInfo();
+        }
+    }, [isFocused, refreshSessionInfo]);
+
+    const logout = async () => {
+        await SecureStore.deleteItemAsync("token");
+        props.navigation.navigate("Login");
     };
     return (
         <DrawerContentScrollView {...props}>
@@ -39,7 +55,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                                 : theme.colors.primaryDark,
                         }}
                     >
-                        User
+                        {sessionInfo ? sessionInfo.username : "User"}
                     </Title>
                     <Caption
                         style={{
@@ -49,7 +65,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                                 : theme.colors.primaryDark,
                         }}
                     >
-                        user@example.com
+                        {sessionInfo ? sessionInfo.email : "example@email.com"}
                     </Caption>
                 </View>
             </View>
@@ -156,11 +172,10 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Settings"
-                    onPress={() => {
-                        props.navigation.navigate("TabNavigator");
-                    }}
+                    onPress={logout}
                     {...itemStyle}
                 />
+                <DrawerItem label="Lgout" onPress={logout} />
             </Drawer.Section>
         </DrawerContentScrollView>
     );

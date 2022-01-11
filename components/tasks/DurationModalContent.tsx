@@ -37,6 +37,7 @@ const DurationModalContent: React.FunctionComponent<{
                     label="Duration"
                     outlineColor={theme.colors.primary}
                     dense
+                    keyboardType="numeric"
                     value={duration.toString()}
                     onChangeText={(text: string) => setDuration(Number(text))}
                 />
