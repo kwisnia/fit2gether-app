@@ -43,15 +43,15 @@ export const combinedDarkTheme = {
     colors: {
         ...PaperDarkTheme.colors,
         ...NavigationDarkTheme.colors,
-        primary: "#301F16",
-        primaryLight: "#241A15",
-        primaryDark: "#1F1714",
+        primary: "#241A15",
+        primaryLight: "#1F1714",
+        primaryDark: "#301F16",
         accent: "#da4167",
-        accentLight: "#ff7595",
-        accentDark: "#a3003d",
+        accentLight: "#a3003d",
+        accentDark: "#ff7595",
         //Not sure about those two
         // surface: "#742800",
-        surface: "#121212",
+        surface: "#301F16",
         background: "#121212",
     },
 };
