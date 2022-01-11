@@ -1,11 +1,12 @@
 import React from "react";
 import { BottomNavigation, useTheme } from "react-native-paper";
-import { View, Text, LogBox } from "react-native";
+import { LogBox } from "react-native";
 import NavAppBar from "../components/NavAppBar";
 import { ThemeContext } from "../context/ThemeContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CalendarScreen from "../screens/CalendarScreen";
 import TasksScreen from "../screens/TasksScreen";
+import ProgressScreen from "../screens/ProgressScreen";
 import { TabContext } from "../context/TabContext";
 
 LogBox.ignoreLogs([
@@ -13,16 +14,6 @@ LogBox.ignoreLogs([
 ]);
 
 const Stack = createNativeStackNavigator();
-function ProgressScreen() {
-    return (
-        <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-            <Text>Progress!</Text>
-        </View>
-    );
-}
-// Placeholder
 
 const Tabs = () => {
     const { tab, setTab } = React.useContext(TabContext);
