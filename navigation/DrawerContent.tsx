@@ -34,7 +34,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     }, [isFocused, refreshSessionInfo]);
 
     const logout = async () => {
-        await SecureStore.deleteItemAsync("token");
+        await SecureStore.deleteItemAsync("session");
         props.navigation.navigate("Login");
     };
     return (
@@ -88,7 +88,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     focused={active === "Buddy System"}
                     onPress={() => {
                         setActive("Buddy System");
-                        props.navigation.navigate("TabNavigator");
+                        props.navigation.navigate("BuddySystem");
                     }}
                     labelStyle={styles.drawerItem}
                     {...itemStyle}
@@ -172,7 +172,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Settings"
-                    onPress={logout}
+                    onPress={() => {}}
                     {...itemStyle}
                 />
                 <DrawerItem label="Lgout" onPress={logout} />
