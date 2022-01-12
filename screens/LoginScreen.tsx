@@ -1,7 +1,14 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { StyleSheet, View, Image, Text, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+    StyleSheet,
+    View,
+    Image,
+    Text,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
 import { RootStackParamList } from "../types/RootStackParamList";
 import { useTheme, Surface } from "react-native-paper";
 import LoginSurface from "../components/login/LoginSurface";
@@ -10,6 +17,7 @@ import RegisterSurface from "../components/login/RegisterSurface";
 import * as SecureStore from "expo-secure-store";
 import axios, { AxiosResponse } from "axios";
 import { SessionInfo } from "../types/SessionInfo";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
     RootStackParamList,
@@ -20,6 +28,7 @@ type formType = "login" | "register";
 
 const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     const theme = useTheme();
+    const headerHeight = useHeaderHeight();
     const [, setIsWaiting] = React.useState(false);
     const [formType, setFormType] = React.useState<formType>("login");
 
@@ -70,8 +79,12 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     };
 
     return (
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
-            <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+            {Platform.OS === "ios" ? <View style={{ height: 64 }} /> : null}
+            <ScrollView>
                 <View style={styles.logoContainer}>
                     <Image
                         style={styles.logo}
@@ -96,8 +109,8 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
                         <RegisterSurface register={register} />
                     )}
                 </Surface>
-            </SafeAreaView>
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 

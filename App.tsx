@@ -23,6 +23,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import * as SecureStore from "expo-secure-store";
 import { SessionInfo } from "./types/SessionInfo";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 
 registerTranslation("en-GB", enGB);
@@ -69,33 +70,39 @@ const App = () => {
     );
 
     return (
-        <TabContext.Provider value={{ tab, setTab }}>
-            <ThemeContext.Provider value={preferences}>
-                <PaperProvider theme={theme}>
-                    {initialRouteName ? (
-                        <NavigationContainer theme={theme}>
-                            <Stack.Navigator
-                                screenOptions={{
-                                    headerShown: false,
-                                }}
-                                initialRouteName={initialRouteName}
-                            >
-                                <Stack.Screen
-                                    name="Login"
-                                    component={LoginScreen}
-                                />
-                                <Stack.Screen
-                                    name="MainApp"
-                                    component={DrawerNavigator}
-                                />
-                            </Stack.Navigator>
-                        </NavigationContainer>
-                    ) : (
-                        <ActivityIndicator />
-                    )}
-                </PaperProvider>
-            </ThemeContext.Provider>
-        </TabContext.Provider>
+        <SafeAreaProvider>
+            <TabContext.Provider value={{ tab, setTab }}>
+                <ThemeContext.Provider value={preferences}>
+                    <PaperProvider theme={theme}>
+                        {initialRouteName ? (
+                            <NavigationContainer theme={theme}>
+                                <Stack.Navigator
+                                    screenOptions={{
+                                        headerShown: false,
+                                        // headerStyle: {
+                                        //     backgroundColor:
+                                        //         theme.colors.background,
+                                        // },
+                                    }}
+                                    initialRouteName={initialRouteName}
+                                >
+                                    <Stack.Screen
+                                        name="Login"
+                                        component={LoginScreen}
+                                    />
+                                    <Stack.Screen
+                                        name="MainApp"
+                                        component={DrawerNavigator}
+                                    />
+                                </Stack.Navigator>
+                            </NavigationContainer>
+                        ) : (
+                            <ActivityIndicator />
+                        )}
+                    </PaperProvider>
+                </ThemeContext.Provider>
+            </TabContext.Provider>
+        </SafeAreaProvider>
     );
 };
 
