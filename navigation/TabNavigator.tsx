@@ -1,6 +1,6 @@
 import React from "react";
 import { BottomNavigation, useTheme } from "react-native-paper";
-import { LogBox } from "react-native";
+import { LogBox, Settings } from "react-native";
 import NavAppBar from "../components/NavAppBar";
 import { ThemeContext } from "../context/ThemeContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -8,6 +8,7 @@ import CalendarScreen from "../screens/CalendarScreen";
 import TasksScreen from "../screens/TasksScreen";
 import ProgressScreen from "../screens/ProgressScreen";
 import { TabContext } from "../context/TabContext";
+import SettingsScreen from "../screens/SettingsScreen";
 
 LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state",
@@ -24,11 +25,13 @@ const Tabs = () => {
         { key: "calendar", title: "Calendar", icon: "calendar-blank" },
         { key: "tasks", title: "Tasks", icon: "clipboard-list-outline" },
         { key: "progress", title: "Progress", icon: "trending-up" },
+        { key: "settings", title: "Settings", icon: "cog-outline" },
     ]);
     const renderScene = BottomNavigation.SceneMap({
         calendar: CalendarScreen,
         tasks: TasksScreen,
         progress: ProgressScreen,
+        settings: SettingsScreen,
     });
 
     React.useEffect(() => {

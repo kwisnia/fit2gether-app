@@ -172,7 +172,9 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Settings"
-                    onPress={() => {}}
+                    onPress={() => {
+                        setActive("Settings");
+                    }}
                     {...itemStyle}
                 />
                 <DrawerItem label="Lgout" onPress={logout} />
