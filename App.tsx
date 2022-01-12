@@ -23,7 +23,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import * as SecureStore from "expo-secure-store";
 import { SessionInfo } from "./types/SessionInfo";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 
 registerTranslation("en-GB", enGB);
@@ -79,10 +79,6 @@ const App = () => {
                                 <Stack.Navigator
                                     screenOptions={{
                                         headerShown: false,
-                                        // headerStyle: {
-                                        //     backgroundColor:
-                                        //         theme.colors.background,
-                                        // },
                                     }}
                                     initialRouteName={initialRouteName}
                                 >

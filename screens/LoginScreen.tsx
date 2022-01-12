@@ -17,7 +17,6 @@ import RegisterSurface from "../components/login/RegisterSurface";
 import * as SecureStore from "expo-secure-store";
 import axios, { AxiosResponse } from "axios";
 import { SessionInfo } from "../types/SessionInfo";
-import { useHeaderHeight } from "@react-navigation/elements";
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
     RootStackParamList,
@@ -28,7 +27,6 @@ type formType = "login" | "register";
 
 const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     const theme = useTheme();
-    const headerHeight = useHeaderHeight();
     const [, setIsWaiting] = React.useState(false);
     const [formType, setFormType] = React.useState<formType>("login");
 
@@ -83,7 +81,7 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
             style={styles.container}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-            {Platform.OS === "ios" ? <View style={{ height: 64 }} /> : null}
+            <View style={{ height: 64 }} />
             <ScrollView>
                 <View style={styles.logoContainer}>
                     <Image
