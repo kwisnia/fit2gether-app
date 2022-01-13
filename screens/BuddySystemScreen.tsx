@@ -47,6 +47,7 @@ const BuddySystemScreen: React.FunctionComponent = () => {
             const res: AxiosResponse<ConnectionResponse> = await axios.post(
                 `/connect/${inviteCode}`
             );
+            console.log(res.status);
             const pair: AxiosResponse<PairInfo> = await axios.get("/pairInfo");
             setPairInfo(pair.data);
             if (session) {

@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import axios, { AxiosResponse } from "axios";
 import React from "react";
 import { ScrollView } from "react-native";
@@ -9,6 +10,7 @@ const CalendarScreen: React.FunctionComponent = () => {
         new Date().toISOString().split("T")[0]
     );
     const [selectedDayTasks, setSelectedDayTasks] = React.useState<Task[]>([]);
+    const isFocused = useIsFocused();
     const [isLoading, setIsLoading] = React.useState(false);
 
     React.useEffect(() => {
@@ -19,9 +21,11 @@ const CalendarScreen: React.FunctionComponent = () => {
             setSelectedDayTasks(tasks.data);
             setIsLoading(false);
         };
-        setIsLoading(true);
-        void fetchSelectedDayTasks();
-    }, [selectedDay]);
+        if (isFocused) {
+            setIsLoading(true);
+            void fetchSelectedDayTasks();
+        }
+    }, [selectedDay, isFocused]);
 
     return (
         <ScrollView>

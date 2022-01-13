@@ -1,6 +1,6 @@
 import React from "react";
 import axios, { AxiosResponse } from "axios";
-import { ScrollView } from "react-native";
+import { RefreshControl, ScrollView } from "react-native";
 import NewTask from "../components/tasks/NewTask";
 import Task from "../components/tasks/Task";
 import { Task as TaskType } from "../types/Task";
@@ -15,6 +15,15 @@ const TasksScreen: React.FunctionComponent = () => {
         { label: "Training", value: 1 },
     ]);
     const [session] = useSession();
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        const fetchedTasks: AxiosResponse<TaskType[]> = await axios.get(
+            "/tasks?status=todo"
+        );
+        setTasks(fetchedTasks.data);
+    }, []);
 
     React.useEffect(() => {
         const fetchPairTasks = async () => {
@@ -39,7 +48,12 @@ const TasksScreen: React.FunctionComponent = () => {
     };
 
     return (
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             {tasks?.map((task) => (
                 <Task
                     key={task.id}

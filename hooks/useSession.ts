@@ -28,10 +28,14 @@ const useSession = (): [
         [getFromStorage]
     );
 
-    const updateSession = React.useCallback(async (newInfo: SessionInfo) => {
-        await SecureStore.setItemAsync("session", JSON.stringify(newInfo));
-        axios.defaults.headers.common.Authorization = `Bearer ${newInfo.token.accessToken}`;
-    }, []);
+    const updateSession = React.useCallback(
+        async (newInfo: SessionInfo) => {
+            await SecureStore.setItemAsync("session", JSON.stringify(newInfo));
+            axios.defaults.headers.common.Authorization = `Bearer ${newInfo.token.accessToken}`;
+            refreshSessionInfo();
+        },
+        [refreshSessionInfo]
+    );
 
     return [sessionInfo, refreshSessionInfo, updateSession];
 };
