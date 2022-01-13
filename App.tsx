@@ -24,7 +24,6 @@ import LoginScreen from "./screens/LoginScreen";
 import * as SecureStore from "expo-secure-store";
 import { SessionInfo } from "./types/SessionInfo";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Constants from "expo-constants";
 
 registerTranslation("en-GB", enGB);
 axios.defaults.baseURL = "https://fit2gether-api.herokuapp.com";
@@ -39,7 +38,6 @@ const App = () => {
     React.useEffect(() => {
         const getFromStorage = async () => {
             const result = await SecureStore.getItemAsync("session");
-            console.log(result);
             if (result) {
                 const sessionInfo = JSON.parse(result) as SessionInfo;
                 setInitialRouteName("MainApp");

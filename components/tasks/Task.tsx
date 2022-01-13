@@ -16,24 +16,27 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import CompletedModalContent from "./CompletedModalContent";
 import DurationModalContent from "./DurationModalContent";
+import axios, { AxiosResponse } from "axios";
+import { TaskCompleteDetails } from "../../types/TaskCompleteDetails";
 dayjs.extend(customParseFormat);
 
 const Task: React.FunctionComponent<{
     task: TaskType;
     categories: CategoryType[];
-}> = ({ task, categories }) => {
+    userId: number | undefined;
+    refresh: () => Promise<void>;
+}> = ({ task, categories, userId, refresh }) => {
     const [isFocused, setIsFocused] = React.useState(false);
     const [completedModalVisible, setCompletedModalVisible] =
         React.useState(false);
     const [durationModalVisible, setDurationModalVisible] =
         React.useState(false);
     const [duration, setDuration] = React.useState(0);
-    const [date, setDate] = React.useState(dayjs(task.date, "DD-MM-YYYY"));
+    const [date, setDate] = React.useState(dayjs(task.date, "YYYY-MM-DD"));
     const [showDatePicker, setShowDatePicker] = React.useState(false);
     const [title, setTitle] = React.useState(task.name);
-    const [category, setCategory] = React.useState(
-        categories[task.category.id].value
-    );
+    const [category, setCategory] = React.useState(task.category.value);
+    const [experience, setExperience] = React.useState(40);
     const theme = useTheme();
 
     const getColorBasedOnFocus = (focused: boolean) => {
@@ -47,15 +50,21 @@ const Task: React.FunctionComponent<{
                     visible={completedModalVisible}
                     onDismiss={() => setCompletedModalVisible(false)}
                 >
-                    <CompletedModalContent exp={40} />
+                    <CompletedModalContent exp={experience} />
                 </Modal>
                 <Modal visible={durationModalVisible} dismissable={false}>
                     <DurationModalContent
                         duration={duration}
                         setDuration={setDuration}
-                        dismiss={() => {
+                        dismiss={async () => {
+                            const res: AxiosResponse<TaskCompleteDetails> =
+                                await axios.put(`/task/${task.id}/complete`, {
+                                    duration,
+                                });
+                            setExperience(res.data.experience);
                             setDurationModalVisible(false);
                             setCompletedModalVisible(true);
+                            void refresh();
                         }}
                     />
                 </Modal>
@@ -79,7 +88,7 @@ const Task: React.FunctionComponent<{
                     <Text style={styles.taskTitle}>{task.name}</Text>
                 </Surface>
             </Pressable>
-            {isFocused ? (
+            {isFocused && task.userId === userId ? (
                 <Surface
                     style={[
                         styles.container,
@@ -113,7 +122,7 @@ const Task: React.FunctionComponent<{
                             onChangeText={(text: string) => setTitle(text)}
                         />
                         <RNPickerSelect
-                            onValueChange={(value: string) =>
+                            onValueChange={(value: number) =>
                                 setCategory(value)
                             }
                             placeholder={{}}
@@ -146,7 +155,11 @@ const Task: React.FunctionComponent<{
                                 label="Category"
                                 outlineColor={theme.colors.primaryDark}
                                 dense
-                                value={category}
+                                value={
+                                    categories.find(
+                                        (cat) => cat.value === category
+                                    )!.label
+                                }
                             />
                         </RNPickerSelect>
                     </View>

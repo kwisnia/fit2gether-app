@@ -3,40 +3,44 @@ import { ScrollView } from "react-native";
 import ExperienceBar from "../components/progress/ExperienceBar";
 import RecentActivitySurface from "../components/progress/RecentActivitySurface";
 import { PairInfo } from "../types/PairInfo";
-
-const PAIR_INFO: PairInfo = {
-    name: "Albedo",
-    buddyName: "Hu Tao",
-    experienceLevel: 1,
-    experience: 250,
-    experienceRequired: 1890,
-    recentActivities: [
-        {
-            name: "Prank Zhongli",
-            userId: 5,
-            completionTime: "2021-12-15T21:31:14.762Z",
-        },
-        {
-            name: "Embarass Sucrose",
-            userId: 5,
-            completionTime: "2021-12-15T21:31:14.762Z",
-        },
-        {
-            name: "Bomb fishing with Klee",
-            userId: 5,
-            completionTime: "2021-12-15T21:31:14.762Z",
-        },
-    ],
-};
+import useSession from "../hooks/useSession";
+import axios, { AxiosResponse } from "axios";
+import { useIsFocused } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 const ProgressScreen = () => {
     //TODO: make it fetch *happy Gretchen noises*
-    const [pairInfo] = React.useState(PAIR_INFO);
+    /* on wednesdays we wear pink */
+    const [pairInfo, setPairInfo] = React.useState<PairInfo | null>(null);
+    const isFocused = useIsFocused();
+    const [session, refreshSessionInfo] = useSession();
+    const fetchPairInfo = async () => {
+        const pair: AxiosResponse<PairInfo> = await axios.get("/pairInfo");
+        setPairInfo(pair.data);
+    };
+    React.useEffect(() => {
+        void fetchPairInfo();
+    }, [session]);
+
+    React.useEffect(() => {
+        if (isFocused) {
+            refreshSessionInfo();
+            void fetchPairInfo();
+        }
+    }, [isFocused, refreshSessionInfo]);
 
     return (
         <ScrollView>
-            <ExperienceBar pairInfo={pairInfo} />
-            <RecentActivitySurface activities={pairInfo.recentActivities} />
+            {pairInfo ? (
+                <ScrollView>
+                    <ExperienceBar pairInfo={pairInfo} />
+                    <RecentActivitySurface
+                        activities={pairInfo.recentActivities}
+                    />
+                </ScrollView>
+            ) : (
+                <ActivityIndicator />
+            )}
         </ScrollView>
     );
 };

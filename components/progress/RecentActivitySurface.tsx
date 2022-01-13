@@ -4,7 +4,7 @@ import { Surface, Avatar, useTheme } from "react-native-paper";
 import { RecentActivity } from "../../types/PairInfo";
 import dayjs from "dayjs";
 
-const Task: React.FunctionComponent<{ activity: RecentActivity }> = ({
+const Task: React.FunctionComponent<{ activity: RecentActivity}> = ({
     activity,
 }) => {
     return (
@@ -19,9 +19,9 @@ const Task: React.FunctionComponent<{ activity: RecentActivity }> = ({
                 }}
             ></Avatar.Image>
             <View style={styles.taskTextContainer}>
-                <Text style={styles.taskText}>{activity.name}</Text>
+                <Text style={styles.taskText}>{activity?.name}</Text>
                 <Text style={styles.taskDate}>
-                    {dayjs(activity.completionTime).format("DD/MM/YYYY")}
+                    {dayjs(activity?.completionTime).format("DD/MM/YYYY")}
                 </Text>
             </View>
         </Surface>

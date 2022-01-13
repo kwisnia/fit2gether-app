@@ -4,7 +4,7 @@ export interface Task {
     date: string;
     userId: number;
     category: {
-        id: number;
-        name: string;
+        value: number;
+        label: string;
     };
 }

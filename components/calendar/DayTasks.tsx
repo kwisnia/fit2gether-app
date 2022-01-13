@@ -1,8 +1,6 @@
 import React from "react";
 import {
-    Card,
     useTheme,
-    Title,
     Surface,
     ActivityIndicator,
 } from "react-native-paper";

@@ -88,7 +88,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     focused={active === "Buddy System"}
                     onPress={() => {
                         setActive("Buddy System");
-                        props.navigation.navigate("BuddySystem");
+                        props.navigation.navigate("Buddy");
                     }}
                     labelStyle={styles.drawerItem}
                     {...itemStyle}
@@ -105,7 +105,9 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     focused={active === "Calendar"}
                     onPress={() => {
                         setActive("Calendar");
-                        props.navigation.navigate("TabNavigator");
+                        props.navigation.navigate("TabNavigator", {
+                            screen: "Tabs",
+                        });
                     }}
                     {...itemStyle}
                 />
@@ -121,7 +123,9 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     focused={active === "Tasks"}
                     onPress={() => {
                         setActive("Tasks");
-                        props.navigation.navigate("TabNavigator");
+                        props.navigation.navigate("TabNavigator", {
+                            screen: "Tabs",
+                        });
                     }}
                     {...itemStyle}
                 />
@@ -137,7 +141,9 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     focused={active === "Progress"}
                     onPress={() => {
                         setActive("Progress");
-                        props.navigation.navigate("TabNavigator");
+                        props.navigation.navigate("TabNavigator", {
+                            screen: "Tabs",
+                        });
                     }}
                     {...itemStyle}
                 />
@@ -174,6 +180,9 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     label="Settings"
                     onPress={() => {
                         setActive("Settings");
+                        props.navigation.navigate("TabNavigator", {
+                            screen: "Settings",
+                        });
                     }}
                     {...itemStyle}
                 />

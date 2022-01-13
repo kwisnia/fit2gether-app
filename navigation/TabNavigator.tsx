@@ -9,6 +9,7 @@ import TasksScreen from "../screens/TasksScreen";
 import ProgressScreen from "../screens/ProgressScreen";
 import { TabContext } from "../context/TabContext";
 import SettingsScreen from "../screens/SettingsScreen";
+import BuddySystemScreen from "../screens/BuddySystemScreen";
 
 LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state",
@@ -25,13 +26,11 @@ const Tabs = () => {
         { key: "calendar", title: "Calendar", icon: "calendar-blank" },
         { key: "tasks", title: "Tasks", icon: "clipboard-list-outline" },
         { key: "progress", title: "Progress", icon: "trending-up" },
-        { key: "settings", title: "Settings", icon: "cog-outline" },
     ]);
     const renderScene = BottomNavigation.SceneMap({
         calendar: CalendarScreen,
         tasks: TasksScreen,
         progress: ProgressScreen,
-        settings: SettingsScreen,
     });
 
     React.useEffect(() => {
@@ -63,9 +62,12 @@ const TabNavigator = () => {
         <Stack.Navigator
             screenOptions={{
                 header: () => <NavAppBar title={tab} />,
+                animation: "none",
             }}
         >
             <Stack.Screen name="Tabs" component={Tabs} />
+            <Stack.Screen name="Buddy" component={BuddySystemScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
         </Stack.Navigator>
     );
 };

@@ -2,6 +2,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import React from "react";
 import { useTheme } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import BuddySystemScreen from "../screens/BuddySystemScreen";
 import DrawerContent from "./DrawerContent";
 import TabNavigator from "./TabNavigator";
 

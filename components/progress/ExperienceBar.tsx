@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Surface, Avatar, useTheme } from "react-native-paper";
 import { PairInfo } from "../../types/PairInfo";
 
-const UserHeader: React.FunctionComponent<{ icon: string; name: string }> = ({
+const UserHeader: React.FunctionComponent<{ icon: string; name: string | undefined }> = ({
     icon,
     name,
 }) => {
@@ -20,7 +20,7 @@ const UserHeader: React.FunctionComponent<{ icon: string; name: string }> = ({
     );
 };
 
-const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo }> = ({
+const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
     pairInfo,
 }) => {
     const theme = useTheme();
@@ -31,11 +31,11 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo }> = ({
                 <View style={styles.header}>
                     <UserHeader
                         icon="https://static.wikia.nocookie.net/7f013cd3-16cd-4b47-a30e-94ef61d8391d"
-                        name={pairInfo.name}
+                        name={pairInfo?.name}
                     />
                     <UserHeader
                         icon="https://i.redd.it/rbbzu2ah8pk61.jpg"
-                        name={pairInfo.buddyName}
+                        name={pairInfo?.buddyName}
                     />
                 </View>
             </Surface>
@@ -53,7 +53,7 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo }> = ({
             >
                 <Text
                     style={styles.levelText}
-                >{`LEVEL ${pairInfo.experienceLevel}`}</Text>
+                >{`LEVEL ${pairInfo!.experienceLevel}`}</Text>
                 <Surface style={styles.experienceBarBackground}>
                     <View
                         style={{
@@ -62,8 +62,8 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo }> = ({
                             borderBottomLeftRadius: 50,
                             backgroundColor: theme.colors.accent,
                             width: `${
-                                (pairInfo.experience /
-                                    pairInfo.experienceRequired) *
+                                (pairInfo!.experience /
+                                    pairInfo!.experienceRequired) *
                                 100
                             }%`,
                         }}
@@ -71,7 +71,7 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo }> = ({
                 </Surface>
                 <Text
                     style={styles.levelText}
-                >{`${pairInfo.experience}/${pairInfo.experienceRequired} XP`}</Text>
+                >{`${pairInfo!.experience}/${pairInfo!.experienceRequired} XP`}</Text>
             </Surface>
         </View>
     );

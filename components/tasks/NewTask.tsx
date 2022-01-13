@@ -7,6 +7,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { DatePickerModal } from "react-native-paper-dates";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import axios from "axios";
 dayjs.extend(customParseFormat);
 
 const NewTask: React.FunctionComponent<{
@@ -17,7 +18,7 @@ const NewTask: React.FunctionComponent<{
     const [date, setDate] = React.useState<Date | undefined>(undefined);
     const [showDatePicker, setShowDatePicker] = React.useState(false);
     const [title, setTitle] = React.useState("");
-    const [category, setCategory] = React.useState("");
+    const [category, setCategory] = React.useState(1);
     const theme = useTheme();
 
     const getColorBasedOnFocus = (focused: boolean) => {
@@ -80,7 +81,7 @@ const NewTask: React.FunctionComponent<{
                             onChangeText={(text: string) => setTitle(text)}
                         />
                         <RNPickerSelect
-                            onValueChange={(value: string) =>
+                            onValueChange={(value: number) =>
                                 setCategory(value)
                             }
                             placeholder={{}}
@@ -114,7 +115,11 @@ const NewTask: React.FunctionComponent<{
                                 label="Category"
                                 outlineColor={theme.colors.accentDark}
                                 dense
-                                value={category}
+                                value={
+                                    categories.find(
+                                        (cat) => cat.value === category
+                                    )?.label || "Training"
+                                }
                             />
                         </RNPickerSelect>
                     </View>
@@ -167,10 +172,15 @@ const NewTask: React.FunctionComponent<{
                     <View style={styles.controls}>
                         <Pressable
                             onPress={async () => {
+                                await axios.post("/task", {
+                                    name: title,
+                                    date: dayjs(date).format("YYYY-MM-DD"),
+                                    categoryId: category,
+                                });
                                 await refresh();
                                 setDate(undefined);
                                 setTitle("");
-                                setCategory("");
+                                setCategory(1);
                                 setIsFocused(false);
                             }}
                         >

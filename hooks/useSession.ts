@@ -1,8 +1,13 @@
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import React from "react";
 import { SessionInfo } from "../types/SessionInfo";
 
-const useSession = (): [SessionInfo | null, () => void] => {
+const useSession = (): [
+    SessionInfo | null,
+    () => void,
+    (_: SessionInfo) => void
+] => {
     const [sessionInfo, setSessionInfo] = React.useState<SessionInfo | null>(
         null
     );
@@ -14,13 +19,21 @@ const useSession = (): [SessionInfo | null, () => void] => {
             setSessionInfo(result);
         }
     }, []);
+    React.useEffect(() => {
+        void getFromStorage();
+    }, [getFromStorage]);
 
     const refreshSessionInfo = React.useCallback(
         () => void getFromStorage(),
         [getFromStorage]
     );
 
-    return [sessionInfo, refreshSessionInfo];
+    const updateSession = React.useCallback(async (newInfo: SessionInfo) => {
+        await SecureStore.setItemAsync("session", JSON.stringify(newInfo));
+        axios.defaults.headers.common.Authorization = `Bearer ${newInfo.token.accessToken}`;
+    }, []);
+
+    return [sessionInfo, refreshSessionInfo, updateSession];
 };
 
 export default useSession;
