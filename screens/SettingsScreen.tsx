@@ -1,15 +1,15 @@
 import { useIsFocused } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Surface, Avatar, useTheme, TextInput } from "react-native-paper";
-import useSession from "../hooks/useSession";
+import { SessionContext } from "../context/SessionContext";
 
 const SettingsScreen = () => {
     const theme = useTheme();
-    const [session, refreshSessionInfo] = useSession();
+    const [sessionInfo, refreshSessionInfo] = useContext(SessionContext);
     const isFocused = useIsFocused();
-    const [username, setUsername] = React.useState(session?.username);
-    const [email, setEmail] = React.useState(session?.email);
+    const [username, setUsername] = React.useState(sessionInfo?.username);
+    const [email, setEmail] = React.useState(sessionInfo?.email);
     const [oldPassword, setOldPassword] = React.useState("");
     const [newPassword, setNewPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
@@ -25,9 +25,9 @@ const SettingsScreen = () => {
     }, [isFocused, refreshSessionInfo]);
 
     React.useEffect(() => {
-        setUsername(session?.username);
-        setEmail(session?.email);
-    }, [session]);
+        setUsername(sessionInfo?.username);
+        setEmail(sessionInfo?.email);
+    }, [sessionInfo]);
 
     return (
         <View>

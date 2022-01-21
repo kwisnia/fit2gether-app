@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Surface, useTheme } from "react-native-paper";
 import QRCode from "react-native-qrcode-svg";
-import useSession from "../../hooks/useSession";
+import { SessionContext } from "../../context/SessionContext";
 
 const QRCodeSurface = () => {
     const theme = useTheme();
-    const [session] = useSession();
+    const [sessionInfo] = useContext(SessionContext);
 
     return (
         <Surface
@@ -29,9 +29,9 @@ const QRCodeSurface = () => {
                 </Text>
             </View>
             <View style={styles.qrContainer}>
-                {session ? (
+                {sessionInfo ? (
                     <QRCode
-                        value={`fit2gether-${session.inviteCode}`}
+                        value={`fit2gether-${sessionInfo.inviteCode}`}
                         quietZone={20}
                         size={200}
                     />

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import axios, { AxiosResponse } from "axios";
 import { RefreshControl, ScrollView } from "react-native";
 import NewTask from "../components/tasks/NewTask";
 import Task from "../components/tasks/Task";
 import { Task as TaskType } from "../types/Task";
 import { Category as CategoryType } from "../types/Category";
-import useSession from "../hooks/useSession";
+import { SessionContext } from "../context/SessionContext";
 
 const TasksScreen: React.FunctionComponent = () => {
     //TODO: those should be fetched
@@ -14,7 +14,7 @@ const TasksScreen: React.FunctionComponent = () => {
     const [categories, setCategories] = React.useState<CategoryType[]>([
         { label: "Training", value: 1 },
     ]);
-    const [session] = useSession();
+    const [sessionInfo] = useContext(SessionContext);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = React.useCallback(async () => {
@@ -59,7 +59,7 @@ const TasksScreen: React.FunctionComponent = () => {
                     key={task.id}
                     task={task}
                     categories={categories}
-                    userId={session?.id}
+                    userId={sessionInfo?.id}
                     refresh={requestListRefresh}
                 />
             ))}

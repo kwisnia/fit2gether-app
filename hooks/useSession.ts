@@ -14,7 +14,9 @@ const useSession = (): [
     const getFromStorage = React.useCallback(async () => {
         const result = await SecureStore.getItemAsync("session");
         if (result !== null) {
-            setSessionInfo(JSON.parse(result) as SessionInfo);
+            const info = JSON.parse(result) as SessionInfo;
+            setSessionInfo(info);
+            axios.defaults.headers.common.Authorization = `Bearer ${info.token.accessToken}`;
         } else {
             setSessionInfo(result);
         }
@@ -31,7 +33,6 @@ const useSession = (): [
     const updateSession = React.useCallback(
         async (newInfo: SessionInfo) => {
             await SecureStore.setItemAsync("session", JSON.stringify(newInfo));
-            axios.defaults.headers.common.Authorization = `Bearer ${newInfo.token.accessToken}`;
             refreshSessionInfo();
         },
         [refreshSessionInfo]

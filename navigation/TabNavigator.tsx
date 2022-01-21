@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BottomNavigation, useTheme } from "react-native-paper";
 import { LogBox, Settings } from "react-native";
 import NavAppBar from "../components/NavAppBar";
@@ -10,6 +10,7 @@ import ProgressScreen from "../screens/ProgressScreen";
 import { TabContext } from "../context/TabContext";
 import SettingsScreen from "../screens/SettingsScreen";
 import BuddySystemScreen from "../screens/BuddySystemScreen";
+import { SessionContext } from "../context/SessionContext";
 
 LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state",
@@ -57,6 +58,7 @@ const Tabs = () => {
 
 const TabNavigator = () => {
     const { tab } = React.useContext(TabContext);
+    const [sessionInfo] = useContext(SessionContext);
 
     return (
         <Stack.Navigator
@@ -65,7 +67,9 @@ const TabNavigator = () => {
                 animation: "none",
             }}
         >
-            <Stack.Screen name="Tabs" component={Tabs} />
+            {sessionInfo?.buddyId ? (
+                <Stack.Screen name="Tabs" component={Tabs} />
+            ) : null}
             <Stack.Screen name="Buddy" component={BuddySystemScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
         </Stack.Navigator>

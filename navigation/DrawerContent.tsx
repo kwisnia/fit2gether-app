@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import {
     DrawerItem,
@@ -10,8 +10,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
 import { TabContext } from "../context/TabContext";
 import * as SecureStore from "expo-secure-store";
-import useSession from "../hooks/useSession";
 import { useIsFocused } from "@react-navigation/native";
+import { SessionContext } from "../context/SessionContext";
 
 const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     props
@@ -24,7 +24,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
         activeBackgroundColor: theme.colors.accent,
         inactiveTintColor: isThemeDark ? "white" : theme.colors.primaryDark,
     };
-    const [sessionInfo, refreshSessionInfo] = useSession();
+    const [sessionInfo, refreshSessionInfo] = useContext(SessionContext);
     const isFocused = useIsFocused();
 
     React.useEffect(() => {
@@ -35,6 +35,8 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
 
     const logout = async () => {
         await SecureStore.deleteItemAsync("session");
+        refreshSessionInfo();
+        props.navigation.closeDrawer();
         props.navigation.navigate("Login");
     };
     return (
@@ -93,60 +95,64 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     labelStyle={styles.drawerItem}
                     {...itemStyle}
                 />
-                <DrawerItem
-                    icon={({ color, size }) => (
-                        <MaterialCommunityIcons
-                            name="calendar-blank"
-                            color={color}
-                            size={size}
+                {sessionInfo?.buddyId ? (
+                    <View>
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                <MaterialCommunityIcons
+                                    name="calendar-blank"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Calendar"
+                            focused={active === "Calendar"}
+                            onPress={() => {
+                                setActive("Calendar");
+                                props.navigation.navigate("TabNavigator", {
+                                    screen: "Tabs",
+                                });
+                            }}
+                            {...itemStyle}
                         />
-                    )}
-                    label="Calendar"
-                    focused={active === "Calendar"}
-                    onPress={() => {
-                        setActive("Calendar");
-                        props.navigation.navigate("TabNavigator", {
-                            screen: "Tabs",
-                        });
-                    }}
-                    {...itemStyle}
-                />
-                <DrawerItem
-                    icon={({ color, size }) => (
-                        <MaterialCommunityIcons
-                            name="view-list-outline"
-                            color={color}
-                            size={size}
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                <MaterialCommunityIcons
+                                    name="view-list-outline"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Tasks"
+                            focused={active === "Tasks"}
+                            onPress={() => {
+                                setActive("Tasks");
+                                props.navigation.navigate("TabNavigator", {
+                                    screen: "Tabs",
+                                });
+                            }}
+                            {...itemStyle}
                         />
-                    )}
-                    label="Tasks"
-                    focused={active === "Tasks"}
-                    onPress={() => {
-                        setActive("Tasks");
-                        props.navigation.navigate("TabNavigator", {
-                            screen: "Tabs",
-                        });
-                    }}
-                    {...itemStyle}
-                />
-                <DrawerItem
-                    icon={({ color, size }) => (
-                        <MaterialCommunityIcons
-                            name="trending-up"
-                            color={color}
-                            size={size}
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                <MaterialCommunityIcons
+                                    name="trending-up"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Progress"
+                            focused={active === "Progress"}
+                            onPress={() => {
+                                setActive("Progress");
+                                props.navigation.navigate("TabNavigator", {
+                                    screen: "Tabs",
+                                });
+                            }}
+                            {...itemStyle}
                         />
-                    )}
-                    label="Progress"
-                    focused={active === "Progress"}
-                    onPress={() => {
-                        setActive("Progress");
-                        props.navigation.navigate("TabNavigator", {
-                            screen: "Tabs",
-                        });
-                    }}
-                    {...itemStyle}
-                />
+                    </View>
+                ) : null}
             </Drawer.Section>
             <View
                 style={{
@@ -186,7 +192,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     }}
                     {...itemStyle}
                 />
-                <DrawerItem label="Lgout" onPress={logout} />
+                <DrawerItem label="Logout" onPress={logout} />
             </Drawer.Section>
         </DrawerContentScrollView>
     );

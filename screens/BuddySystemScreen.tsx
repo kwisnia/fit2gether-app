@@ -1,25 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import axios, { AxiosResponse } from "axios";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import QRCodeSurface from "../components/buddy/QRCodeSurface";
 import YourBuddySurface from "../components/buddy/YourBuddySurface";
 import { PairInfo } from "../types/PairInfo";
-import useSession from "../hooks/useSession";
 import { useIsFocused } from "@react-navigation/native";
-import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Camera } from "expo-camera";
 import { ConnectionResponse } from "../types/ConnectionResponse";
+import { SessionContext } from "../context/SessionContext";
 
 const BuddySystemScreen: React.FunctionComponent = () => {
     const [pairInfo, setPairInfo] = React.useState<PairInfo | null>(null);
     const isFocused = useIsFocused();
-    const [session, refreshSessionInfo, updateSession] = useSession();
+    const [sessionInfo, refreshSessionInfo, updateSessionInfo] =
+        useContext(SessionContext);
     const [scanning, setScanning] = React.useState(false);
     const [scanned, setScanned] = React.useState(false);
 
     React.useEffect(() => {
-        if (session?.buddyId) {
+        if (sessionInfo?.buddyId) {
             const fetchPairInfo = async () => {
                 const pair: AxiosResponse<PairInfo> = await axios.get(
                     "/pairInfo"
@@ -28,7 +29,7 @@ const BuddySystemScreen: React.FunctionComponent = () => {
             };
             void fetchPairInfo();
         }
-    }, [session]);
+    }, [sessionInfo]);
 
     React.useEffect(() => {
         if (isFocused) {
@@ -50,13 +51,13 @@ const BuddySystemScreen: React.FunctionComponent = () => {
             console.log(res.status);
             const pair: AxiosResponse<PairInfo> = await axios.get("/pairInfo");
             setPairInfo(pair.data);
-            if (session) {
-                updateSession({
-                    ...session,
+            if (sessionInfo) {
+                updateSessionInfo({
+                    ...sessionInfo,
                     buddyId: res.data.buddyId,
                     buddyProfilePicture: res.data.buddyProfilePicture,
                     token: {
-                        ...session.token,
+                        ...sessionInfo.token,
                         accessToken: res.data.accessToken,
                     },
                 });
