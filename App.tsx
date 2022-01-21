@@ -24,14 +24,14 @@ import LoginScreen from "./screens/LoginScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import useSession from "./hooks/useSession";
 import { SessionContext } from "./context/SessionContext";
+import useThemeSwitcher from "./hooks/useThemeSwitcher";
 
 registerTranslation("en-GB", enGB);
 axios.defaults.baseURL = "https://fit2gether-api.herokuapp.com";
 
 const App = () => {
     const Stack = createNativeStackNavigator();
-    const [isThemeDark, setIsThemeDark] = React.useState(false);
-    const [theme, setTheme] = React.useState(combinedDefaultTheme);
+    const [theme, themes, isThemeDark, setTheme] = useThemeSwitcher();
     const [tab, setTab] = React.useState("Calendar");
     const [initialRouteName, setInitialRouteName] = React.useState("");
     const [sessionInfo, refreshSessionInfo, updateSession] = useSession();
@@ -45,28 +45,17 @@ const App = () => {
         setTab(sessionInfo?.buddyId ? "Calendar" : "Buddy System");
     }, [sessionInfo]);
 
-    React.useEffect(() => {
-        isThemeDark
-            ? setTheme(combinedDarkTheme)
-            : setTheme(combinedDefaultTheme);
-    }, [isThemeDark]);
-
-    const toggleTheme = React.useCallback(() => {
-        return setIsThemeDark(!isThemeDark);
-    }, [isThemeDark]);
-
-    const preferences = React.useMemo(
-        () => ({
-            toggleTheme,
-            isThemeDark,
-        }),
-        [toggleTheme, isThemeDark]
-    );
-
     return (
         <SafeAreaProvider>
             <TabContext.Provider value={{ tab, setTab }}>
-                <ThemeContext.Provider value={preferences}>
+                <ThemeContext.Provider
+                    value={{
+                        theme,
+                        themes,
+                        isThemeDark,
+                        setTheme,
+                    }}
+                >
                     <SessionContext.Provider
                         value={[sessionInfo, refreshSessionInfo, updateSession]}
                     >

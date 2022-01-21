@@ -12,11 +12,12 @@ import { TabContext } from "../context/TabContext";
 import * as SecureStore from "expo-secure-store";
 import { useIsFocused } from "@react-navigation/native";
 import { SessionContext } from "../context/SessionContext";
+import RNPickerSelect from "react-native-picker-select";
 
 const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     props
 ) => {
-    const { isThemeDark, toggleTheme } = React.useContext(ThemeContext);
+    const { themes, isThemeDark, setTheme } = React.useContext(ThemeContext);
     const theme = useTheme();
     const { tab: active, setTab: setActive } = React.useContext(TabContext);
     const itemStyle = {
@@ -161,20 +162,30 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                 }}
             />
             <Drawer.Section style={styles.drawerSection}>
-                <DrawerItem
-                    icon={({ color, size }) => (
-                        <MaterialCommunityIcons
-                            name="eye"
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label="Theme"
-                    onPress={() => {
-                        toggleTheme();
+                <RNPickerSelect
+                    onValueChange={(value: string) => {
+                        console.log(value);
+                        setTheme(value);
                     }}
-                    {...itemStyle}
-                />
+                    placeholder={{}}
+                    items={themes.map((theme) => ({
+                        value: theme.name,
+                        label: theme.name,
+                    }))}
+                >
+                    <DrawerItem
+                        icon={({ color, size }) => (
+                            <MaterialCommunityIcons
+                                name="eye"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Theme"
+                        onPress={() => {}}
+                        {...itemStyle}
+                    />
+                </RNPickerSelect>
                 <DrawerItem
                     icon={({ color, size }) => (
                         <MaterialCommunityIcons
