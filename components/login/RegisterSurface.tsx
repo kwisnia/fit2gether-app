@@ -8,12 +8,15 @@ interface RegisterProps {
         username: string,
         email: string,
         password: string,
-        repeatInputPassword: string
+        repeatInputPassword: string,
+        safety: number
     ): void;
+    errorMessage: string;
 }
 
 const RegisterSurface: React.FunctionComponent<RegisterProps> = ({
     register,
+    errorMessage,
 }) => {
     const [inputUsername, setInputUsername] = React.useState("");
     const [inputEmail, setInputEmail] = React.useState("");
@@ -114,12 +117,14 @@ const RegisterSurface: React.FunctionComponent<RegisterProps> = ({
                         inputUsername,
                         inputEmail,
                         inputPassword,
-                        repeatInputPassword
+                        repeatInputPassword,
+                        safety
                     )
                 }
             >
                 Register
             </Button>
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
         </View>
     );
 };
@@ -133,5 +138,9 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 15,
         marginHorizontal: 60,
+    },
+    errorMessage: {
+        color: "red",
+        textAlign: "center",
     },
 });

@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { useTheme, TextInput, Button } from "react-native-paper";
 
 const LoginSurface: React.FunctionComponent<{
     login: (email: string, password: string) => void;
-}> = ({ login }) => {
+    errorMessage: string;
+}> = ({ login, errorMessage }) => {
     const [inputEmail, setInputEmail] = React.useState("");
     const [inputPassword, setInputPassword] = React.useState("");
     const theme = useTheme();
@@ -56,6 +57,7 @@ const LoginSurface: React.FunctionComponent<{
             >
                 Login
             </Button>
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
         </View>
     );
 };
@@ -69,5 +71,9 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 15,
         marginHorizontal: 60,
+    },
+    errorMessage: {
+        color: "red",
+        textAlign: "center",
     },
 });

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useContext } from "react";
 import {
     StyleSheet,
     View,
@@ -14,9 +14,9 @@ import { useTheme, Surface } from "react-native-paper";
 import LoginSurface from "../components/login/LoginSurface";
 import LoginRegisterSelector from "../components/login/LoginRegisterSelector";
 import RegisterSurface from "../components/login/RegisterSurface";
-import * as SecureStore from "expo-secure-store";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { SessionInfo } from "../types/SessionInfo";
+import { SessionContext } from "../context/SessionContext";
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
     RootStackParamList,
@@ -29,31 +29,47 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     const theme = useTheme();
     const [, setIsWaiting] = React.useState(false);
     const [formType, setFormType] = React.useState<formType>("login");
+    const [session, , updateSessionInfo] = useContext(SessionContext);
+    const [errorMessage, setErrorMessage] = React.useState("");
+
+    React.useEffect(() => {
+        if (session) {
+            setIsWaiting(false);
+            navigation.navigate("MainApp", {});
+        }
+    }, [session, navigation]);
+
+    React.useEffect(() => {
+        setErrorMessage("");
+    }, [formType]);
 
     const login = async (email: string, password: string) => {
         try {
             setIsWaiting(true);
+            setErrorMessage("");
             const res: AxiosResponse<SessionInfo> = await axios.post("/login", {
                 email,
                 password,
             });
-            await SecureStore.setItemAsync("session", JSON.stringify(res.data));
-            axios.defaults.headers.common.Authorization = `Bearer ${res.data.token.accessToken}`;
-            setIsWaiting(false);
-            navigation.navigate("MainApp", {});
+            updateSessionInfo(res.data);
         } catch (err) {
-            console.log(err);
+            const { response } = err as AxiosError<{ message: string }>;
+            if (response?.status === 404) {
+                setErrorMessage(response.data.message);
+            }
         }
     };
     const register = async (
         username: string,
         email: string,
         password: string,
-        repeatInputPassword: string
+        repeatInputPassword: string,
+        safety: number
     ) => {
         try {
             setIsWaiting(true);
-            if (password === repeatInputPassword) {
+            setErrorMessage("");
+            if (password === repeatInputPassword && safety >= 1) {
                 const res: AxiosResponse<SessionInfo> = await axios.post(
                     "/register",
                     {
@@ -63,16 +79,13 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
                         password2: repeatInputPassword,
                     }
                 );
-                await SecureStore.setItemAsync(
-                    "session",
-                    JSON.stringify(res.data)
-                );
-                axios.defaults.headers.common.Authorization = `Bearer ${res.data.token.accessToken}`;
-                setIsWaiting(false);
-                navigation.navigate("MainApp", {});
+                updateSessionInfo(res.data);
             }
         } catch (err) {
-            console.log(err);
+            const { response } = err as AxiosError<{ message: string }>;
+            if (response?.status === 400) {
+                setErrorMessage(response.data.message);
+            }
         }
     };
 
@@ -102,9 +115,15 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
                     ]}
                 >
                     {formType === "login" ? (
-                        <LoginSurface login={login} />
+                        <LoginSurface
+                            login={login}
+                            errorMessage={errorMessage}
+                        />
                     ) : (
-                        <RegisterSurface register={register} />
+                        <RegisterSurface
+                            register={register}
+                            errorMessage={errorMessage}
+                        />
                     )}
                 </Surface>
             </ScrollView>
