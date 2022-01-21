@@ -23,6 +23,7 @@ const TasksScreen: React.FunctionComponent = () => {
             "/tasks?status=todo"
         );
         setTasks(fetchedTasks.data);
+        setRefreshing(false);
     }, []);
 
     React.useEffect(() => {

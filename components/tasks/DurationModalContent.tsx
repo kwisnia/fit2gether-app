@@ -1,13 +1,19 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Surface, useTheme, TextInput } from "react-native-paper";
+import {
+    Surface,
+    useTheme,
+    TextInput,
+    ActivityIndicator,
+} from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const DurationModalContent: React.FunctionComponent<{
     duration: number;
     setDuration: (value: number) => void;
     dismiss: () => void;
-}> = ({ duration, setDuration, dismiss }) => {
+    pending: boolean;
+}> = ({ duration, setDuration, dismiss, pending }) => {
     const theme = useTheme();
     return (
         <Surface style={styles.container}>
@@ -42,13 +48,17 @@ const DurationModalContent: React.FunctionComponent<{
                     onChangeText={(text: string) => setDuration(Number(text))}
                 />
             </View>
-            <Pressable onPress={dismiss}>
-                <MaterialCommunityIcons
-                    name="checkbox-marked-circle-outline"
-                    color={theme.colors.primaryLight}
-                    size={40}
-                />
-            </Pressable>
+            {pending ? (
+                <ActivityIndicator />
+            ) : (
+                <Pressable onPress={dismiss}>
+                    <MaterialCommunityIcons
+                        name="checkbox-marked-circle-outline"
+                        color={theme.colors.primaryLight}
+                        size={40}
+                    />
+                </Pressable>
+            )}
         </Surface>
     );
 };

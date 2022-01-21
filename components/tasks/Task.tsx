@@ -36,7 +36,13 @@ const Task: React.FunctionComponent<{
     const [showDatePicker, setShowDatePicker] = React.useState(false);
     const [title, setTitle] = React.useState(task.name);
     const [category, setCategory] = React.useState(task.category.value);
-    const [experience, setExperience] = React.useState(40);
+    const [pending, setPending] = React.useState(false);
+    const [taskCompleteDetails, setTaskCompleteDetails] =
+        React.useState<TaskCompleteDetails>({
+            dailyBonus: false,
+            experience: 40,
+            varietyBonus: false,
+        });
     const theme = useTheme();
 
     const getColorBasedOnFocus = (focused: boolean) => {
@@ -48,23 +54,30 @@ const Task: React.FunctionComponent<{
             <Portal>
                 <Modal
                     visible={completedModalVisible}
-                    onDismiss={() => setCompletedModalVisible(false)}
+                    onDismiss={() => {
+                        void refresh();
+                        setCompletedModalVisible(false);
+                    }}
                 >
-                    <CompletedModalContent exp={experience} />
+                    <CompletedModalContent
+                        taskCompleteDetails={taskCompleteDetails}
+                    />
                 </Modal>
                 <Modal visible={durationModalVisible} dismissable={false}>
                     <DurationModalContent
                         duration={duration}
                         setDuration={setDuration}
+                        pending={pending}
                         dismiss={async () => {
+                            setPending(true);
                             const res: AxiosResponse<TaskCompleteDetails> =
                                 await axios.put(`/task/${task.id}/complete`, {
                                     duration,
                                 });
-                            setExperience(res.data.experience);
+                            setTaskCompleteDetails(res.data);
                             setDurationModalVisible(false);
+                            setPending(false);
                             setCompletedModalVisible(true);
-                            void refresh();
                         }}
                     />
                 </Modal>
@@ -158,7 +171,7 @@ const Task: React.FunctionComponent<{
                                 value={
                                     categories.find(
                                         (cat) => cat.value === category
-                                    )!.label
+                                    )?.label || ""
                                 }
                             />
                         </RNPickerSelect>

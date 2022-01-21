@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ScrollView } from "react-native";
+import { RefreshControl, ScrollView } from "react-native";
 import ExperienceBar from "../components/progress/ExperienceBar";
 import RecentActivitySurface from "../components/progress/RecentActivitySurface";
 import { PairInfo } from "../types/PairInfo";
@@ -14,6 +14,7 @@ const ProgressScreen = () => {
     const [pairInfo, setPairInfo] = React.useState<PairInfo | null>(null);
     const isFocused = useIsFocused();
     const [sessionInfo, refreshSessionInfo] = useContext(SessionContext);
+    const [refreshing, setRefreshing] = React.useState(false);
     const fetchPairInfo = async () => {
         const pair: AxiosResponse<PairInfo> = await axios.get("/pairInfo");
         setPairInfo(pair.data);
@@ -29,10 +30,23 @@ const ProgressScreen = () => {
         }
     }, [isFocused, refreshSessionInfo]);
 
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        await fetchPairInfo();
+        setRefreshing(false);
+    }, []);
+
     return (
         <ScrollView>
             {pairInfo ? (
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
                     <ExperienceBar pairInfo={pairInfo} />
                     <RecentActivitySurface
                         activities={pairInfo.recentActivities}

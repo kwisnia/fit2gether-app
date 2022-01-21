@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import axios, { AxiosResponse } from "axios";
 import React from "react";
-import { ScrollView } from "react-native";
+import { RefreshControl, ScrollView } from "react-native";
 import FitCalendar from "../components/calendar/Calendar";
 import DayTasks from "../components/calendar/DayTasks";
 import { Task } from "../types/Task";
@@ -12,23 +12,35 @@ const CalendarScreen: React.FunctionComponent = () => {
     const [selectedDayTasks, setSelectedDayTasks] = React.useState<Task[]>([]);
     const isFocused = useIsFocused();
     const [isLoading, setIsLoading] = React.useState(false);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const fetchSelectedDayTasks = React.useCallback(async () => {
+        const tasks: AxiosResponse<Task[]> = await axios.get(
+            `/tasks?from=${selectedDay}&to=${selectedDay}`
+        );
+        setSelectedDayTasks(tasks.data);
+        setIsLoading(false);
+    }, [selectedDay]);
 
     React.useEffect(() => {
-        const fetchSelectedDayTasks = async () => {
-            const tasks: AxiosResponse<Task[]> = await axios.get(
-                `/tasks?from=${selectedDay}&to=${selectedDay}`
-            );
-            setSelectedDayTasks(tasks.data);
-            setIsLoading(false);
-        };
         if (isFocused) {
             setIsLoading(true);
             void fetchSelectedDayTasks();
         }
-    }, [selectedDay, isFocused]);
+    }, [selectedDay, isFocused, fetchSelectedDayTasks]);
+
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        await fetchSelectedDayTasks();
+        setRefreshing(false);
+    }, [fetchSelectedDayTasks]);
 
     return (
-        <ScrollView>
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             <FitCalendar
                 selectedDate={selectedDay}
                 setSelectedDate={setSelectedDay}
