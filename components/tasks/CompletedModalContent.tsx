@@ -20,9 +20,9 @@ const CompletedModalContent: React.FunctionComponent<{
                 style={styles.text}
             >{`You and your buddy receive ${taskCompleteDetails.experience} XP`}</Text>
             {taskCompleteDetails.dailyBonus ? (
-                <Text>
-                    Wow! You and your buddy completed a task today! Here&apos;s
-                    bonus XP for you.
+                <Text style={styles.text}>
+                    Nice job! You and your buddy completed a task today! You
+                    received additional 69 XP for the task!
                 </Text>
             ) : null}
         </Surface>

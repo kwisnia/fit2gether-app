@@ -1,18 +1,28 @@
 import { useIsFocused } from "@react-navigation/native";
+import axios, { AxiosError } from "axios";
 import React, { useContext } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Surface, Avatar, useTheme, TextInput } from "react-native-paper";
+import {
+    Surface,
+    Avatar,
+    useTheme,
+    TextInput,
+    ActivityIndicator,
+} from "react-native-paper";
 import { SessionContext } from "../context/SessionContext";
 
 const SettingsScreen = () => {
     const theme = useTheme();
-    const [sessionInfo, refreshSessionInfo] = useContext(SessionContext);
+    const [sessionInfo, refreshSessionInfo, updateSessionInfo] =
+        useContext(SessionContext);
     const isFocused = useIsFocused();
-    const [username, setUsername] = React.useState(sessionInfo?.username);
-    const [email, setEmail] = React.useState(sessionInfo?.email);
+    const [username, setUsername] = React.useState(sessionInfo?.username || "");
+    const [email, setEmail] = React.useState(sessionInfo?.email || "");
     const [oldPassword, setOldPassword] = React.useState("");
     const [newPassword, setNewPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
+    const [pending, setPending] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
 
     const getColorBasedOnFocus = (focused: boolean) => {
         return focused ? theme.colors.primary : theme.colors.primaryDark;
@@ -25,9 +35,69 @@ const SettingsScreen = () => {
     }, [isFocused, refreshSessionInfo]);
 
     React.useEffect(() => {
-        setUsername(sessionInfo?.username);
-        setEmail(sessionInfo?.email);
+        setUsername(sessionInfo?.username || "");
+        setEmail(sessionInfo?.email || "");
     }, [sessionInfo]);
+
+    const updateUserData = async () => {
+        setPending(true);
+        const updatedData: {
+            username?: string;
+            email?: string;
+        } = {};
+        if (username && email) {
+            try {
+                await axios.post("/editProfile", {
+                    email,
+                    name: username,
+                });
+                updatedData.username = username;
+                updatedData.email = email;
+                const newToken = await axios.post<{
+                    accessToken: string;
+                    refreshToken: string;
+                }>("/refresh", {
+                    refresh: sessionInfo?.token.refreshToken,
+                });
+                if (sessionInfo) {
+                    updateSessionInfo({
+                        ...sessionInfo,
+                        ...updatedData,
+                        token: newToken.data,
+                    });
+                }
+            } catch (err) {
+                const { response } = err as AxiosError<{
+                    message: string;
+                }>;
+                if (response) {
+                    setErrorMessage(response.data.message);
+                }
+            }
+        }
+        if (
+            oldPassword &&
+            newPassword &&
+            confirmPassword &&
+            newPassword === confirmPassword
+        ) {
+            try {
+                await axios.post("/changePassword", {
+                    oldPassword,
+                    newPassword,
+                    newPassword2: confirmPassword,
+                });
+            } catch (err) {
+                const { response } = err as AxiosError<{
+                    message: string;
+                }>;
+                if (response) {
+                    setErrorMessage(response.data.message);
+                }
+            }
+        }
+        setPending(false);
+    };
 
     return (
         <View>
@@ -149,24 +219,30 @@ const SettingsScreen = () => {
                             }
                         />
                     </View>
-                    <Pressable
-                        style={({ pressed }) => [
-                            {
-                                width: "33%",
-                                opacity: pressed ? 0.5 : 1,
-                            },
-                        ]}
-                    >
-                        <Surface
-                            style={[
-                                styles.button,
-                                { backgroundColor: theme.colors.accent },
+                    {pending ? (
+                        <ActivityIndicator />
+                    ) : (
+                        <Pressable
+                            style={({ pressed }) => [
+                                {
+                                    width: "33%",
+                                    opacity: pressed ? 0.5 : 1,
+                                },
                             ]}
+                            onPress={updateUserData}
                         >
-                            <Text style={styles.text}>SAVE CHANGES</Text>
-                        </Surface>
-                    </Pressable>
+                            <Surface
+                                style={[
+                                    styles.button,
+                                    { backgroundColor: theme.colors.accent },
+                                ]}
+                            >
+                                <Text style={styles.text}>SAVE CHANGES</Text>
+                            </Surface>
+                        </Pressable>
+                    )}
                 </View>
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
             </Surface>
         </View>
     );
@@ -214,5 +290,9 @@ const styles = StyleSheet.create({
         color: "white",
         textAlign: "center",
         fontWeight: "500",
+    },
+    errorMessage: {
+        color: "red",
+        textAlign: "center",
     },
 });
