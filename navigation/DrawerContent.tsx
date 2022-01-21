@@ -164,7 +164,6 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
             <Drawer.Section style={styles.drawerSection}>
                 <RNPickerSelect
                     onValueChange={(value: string) => {
-                        console.log(value);
                         setTheme(value);
                     }}
                     placeholder={{}}
