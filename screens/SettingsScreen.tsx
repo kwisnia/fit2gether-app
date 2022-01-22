@@ -8,9 +8,14 @@ import {
     useTheme,
     TextInput,
     ActivityIndicator,
+    Portal,
+    Modal,
 } from "react-native-paper";
 import { SessionContext } from "../context/SessionContext";
 import { TabContext } from "../context/TabContext";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { AVATARS } from "../components/settings/avatars";
+import AvatarPicker from "../components/settings/AvatarPicker";
 
 const SettingsScreen = () => {
     const theme = useTheme();
@@ -22,9 +27,13 @@ const SettingsScreen = () => {
     const [oldPassword, setOldPassword] = React.useState("");
     const [newPassword, setNewPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
+    const [avatarId, setAvatarId] = React.useState(1);
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [pending, setPending] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
     const { setTab } = React.useContext(TabContext);
+
+    const dismissModal = () => setIsModalVisible(false);
 
     const getColorBasedOnFocus = (focused: boolean) => {
         return focused ? theme.colors.primary : theme.colors.primaryDark;
@@ -104,6 +113,19 @@ const SettingsScreen = () => {
 
     return (
         <View>
+            <Portal>
+                <Modal
+                    visible={isModalVisible}
+                    onDismiss={() => {
+                        setIsModalVisible(false);
+                    }}
+                >
+                    <AvatarPicker
+                        setAvatarId={setAvatarId}
+                        dismiss={dismissModal}
+                    />
+                </Modal>
+            </Portal>
             <Surface style={styles.container}>
                 <Text style={styles.header}>Edit profile</Text>
             </Surface>
@@ -116,15 +138,29 @@ const SettingsScreen = () => {
                 ]}
             >
                 <View style={styles.row}>
-                    <Avatar.Image
-                        size={100}
-                        source={{
-                            uri:
-                                Math.random() > 0.5
-                                    ? "https://i.redd.it/rbbzu2ah8pk61.jpg"
-                                    : "https://static.wikia.nocookie.net/7f013cd3-16cd-4b47-a30e-94ef61d8391d",
-                        }}
-                    ></Avatar.Image>
+                    <Pressable
+                        style={({ pressed }) => ({
+                            opacity: pressed ? 0.6 : 1,
+                        })}
+                        onPress={() => setIsModalVisible(true)}
+                    >
+                        <Avatar.Image
+                            size={100}
+                            source={AVATARS[avatarId]}
+                        ></Avatar.Image>
+                        <View
+                            style={[
+                                styles.editAvatar,
+                                { backgroundColor: theme.colors.primary },
+                            ]}
+                        >
+                            <MaterialCommunityIcons
+                                name="pencil"
+                                color={theme.colors.primaryDark}
+                                size={25}
+                            />
+                        </View>
+                    </Pressable>
                     <View style={styles.inputContainer}>
                         <TextInput
                             style={[
@@ -297,5 +333,12 @@ const styles = StyleSheet.create({
     errorMessage: {
         color: "red",
         textAlign: "center",
+    },
+    editAvatar: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        borderRadius: 100,
+        padding: 5,
     },
 });
