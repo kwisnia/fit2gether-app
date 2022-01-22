@@ -1,5 +1,7 @@
 export interface PairInfo {
     name: string;
+    buddyId: number;
+    buddyProfilePicture: number;
     buddyName: string;
     experienceLevel: number;
     experience: number;

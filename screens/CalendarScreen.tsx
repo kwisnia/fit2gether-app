@@ -30,7 +30,6 @@ const CalendarScreen: React.FunctionComponent = () => {
             void fetchSelectedDayTasks();
             setTab("Calendar");
         }
-        console.log("Calendar render");
     }, [selectedDay, isFocused, fetchSelectedDayTasks, setTab]);
 
     const onRefresh = React.useCallback(async () => {

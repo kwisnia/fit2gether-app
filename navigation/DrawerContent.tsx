@@ -190,7 +190,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     items={themes
                         .slice(
                             0,
-                            1 +
+                            2 +
                                 Math.floor(
                                     (pairInfo &&
                                         pairInfo?.experienceLevel / 3) ||

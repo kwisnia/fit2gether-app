@@ -1,7 +1,7 @@
 export interface SessionInfo {
     id: number;
-    profilePicture: string | null;
-    buddyProfilePicture: string | null;
+    profilePicture: number;
+    buddyProfilePicture: number;
     buddyId: number;
     token: {
         accessToken: string;

@@ -27,7 +27,9 @@ const SettingsScreen = () => {
     const [oldPassword, setOldPassword] = React.useState("");
     const [newPassword, setNewPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
-    const [avatarId, setAvatarId] = React.useState(1);
+    const [avatarId, setAvatarId] = React.useState(
+        sessionInfo?.profilePicture || 1
+    );
     const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [pending, setPending] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -47,8 +49,10 @@ const SettingsScreen = () => {
     }, [isFocused, refreshSessionInfo, setTab]);
 
     React.useEffect(() => {
+        console.log(sessionInfo);
         setUsername(sessionInfo?.username || "");
         setEmail(sessionInfo?.email || "");
+        setAvatarId(sessionInfo?.profilePicture || 1);
     }, [sessionInfo]);
 
     const updateUserData = async () => {
@@ -56,15 +60,19 @@ const SettingsScreen = () => {
         const updatedData: {
             username?: string;
             email?: string;
+            profilePicture?: number;
         } = {};
         if (username && email) {
             try {
+                console.log(avatarId);
                 await axios.post("/editProfile", {
                     email,
                     name: username,
+                    avatarId,
                 });
                 updatedData.username = username;
                 updatedData.email = email;
+                updatedData.profilePicture = avatarId;
                 const newToken = await axios.post<{
                     accessToken: string;
                     refreshToken: string;
