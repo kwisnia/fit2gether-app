@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
 } from "react-native-paper";
 import { SessionContext } from "../context/SessionContext";
+import { TabContext } from "../context/TabContext";
 
 const SettingsScreen = () => {
     const theme = useTheme();
@@ -23,6 +24,7 @@ const SettingsScreen = () => {
     const [confirmPassword, setConfirmPassword] = React.useState("");
     const [pending, setPending] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
+    const { setTab } = React.useContext(TabContext);
 
     const getColorBasedOnFocus = (focused: boolean) => {
         return focused ? theme.colors.primary : theme.colors.primaryDark;
@@ -31,8 +33,9 @@ const SettingsScreen = () => {
     React.useEffect(() => {
         if (isFocused) {
             refreshSessionInfo();
+            setTab("Settings");
         }
-    }, [isFocused, refreshSessionInfo]);
+    }, [isFocused, refreshSessionInfo, setTab]);
 
     React.useEffect(() => {
         setUsername(sessionInfo?.username || "");

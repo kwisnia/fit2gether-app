@@ -4,6 +4,7 @@ import React from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import FitCalendar from "../components/calendar/Calendar";
 import DayTasks from "../components/calendar/DayTasks";
+import { TabContext } from "../context/TabContext";
 import { Task } from "../types/Task";
 const CalendarScreen: React.FunctionComponent = () => {
     const [selectedDay, setSelectedDay] = React.useState(
@@ -13,6 +14,7 @@ const CalendarScreen: React.FunctionComponent = () => {
     const isFocused = useIsFocused();
     const [isLoading, setIsLoading] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
+    const { setTab } = React.useContext(TabContext);
 
     const fetchSelectedDayTasks = React.useCallback(async () => {
         const tasks: AxiosResponse<Task[]> = await axios.get(
@@ -26,8 +28,10 @@ const CalendarScreen: React.FunctionComponent = () => {
         if (isFocused) {
             setIsLoading(true);
             void fetchSelectedDayTasks();
+            setTab("Calendar");
         }
-    }, [selectedDay, isFocused, fetchSelectedDayTasks]);
+        console.log("Calendar render");
+    }, [selectedDay, isFocused, fetchSelectedDayTasks, setTab]);
 
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);

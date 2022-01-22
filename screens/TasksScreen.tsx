@@ -6,6 +6,8 @@ import Task from "../components/tasks/Task";
 import { Task as TaskType } from "../types/Task";
 import { Category as CategoryType } from "../types/Category";
 import { SessionContext } from "../context/SessionContext";
+import { useIsFocused } from "@react-navigation/native";
+import { TabContext } from "../context/TabContext";
 
 const TasksScreen: React.FunctionComponent = () => {
     //TODO: those should be fetched
@@ -14,8 +16,10 @@ const TasksScreen: React.FunctionComponent = () => {
     const [categories, setCategories] = React.useState<CategoryType[]>([
         { label: "Training", value: 1 },
     ]);
+    const isFocused = useIsFocused();
     const [sessionInfo] = useContext(SessionContext);
     const [refreshing, setRefreshing] = React.useState(false);
+    const { setTab } = React.useContext(TabContext);
 
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
@@ -36,8 +40,11 @@ const TasksScreen: React.FunctionComponent = () => {
             );
             setTasks(fetchedTasks.data);
         };
-        void fetchPairTasks();
-    }, []);
+        if (isFocused) {
+            setTab("Tasks");
+            void fetchPairTasks();
+        }
+    }, [isFocused, setTab]);
 
     //TODO: make it actually fetch
     // fetchy fetchy
