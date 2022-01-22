@@ -1,20 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Surface, Avatar, useTheme } from "react-native-paper";
+import { SessionContext } from "../../context/SessionContext";
 import { PairInfo } from "../../types/PairInfo";
+import { AVATARS } from "../settings/avatars";
 
-const UserHeader: React.FunctionComponent<{ icon: string; name: string | undefined }> = ({
-    icon,
-    name,
-}) => {
+const UserHeader: React.FunctionComponent<{
+    icon: any;
+    name: string | undefined;
+}> = ({ icon, name }) => {
     return (
         <View style={styles.userIcon}>
-            <Avatar.Image
-                size={50}
-                source={{
-                    uri: icon,
-                }}
-            ></Avatar.Image>
+            <Avatar.Image size={50} source={icon}></Avatar.Image>
             <Text style={styles.userText}>{name}</Text>
         </View>
     );
@@ -24,17 +22,18 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
     pairInfo,
 }) => {
     const theme = useTheme();
+    const [sessionInfo] = React.useContext(SessionContext);
 
     return (
         <View>
             <Surface style={styles.container}>
                 <View style={styles.header}>
                     <UserHeader
-                        icon="https://static.wikia.nocookie.net/7f013cd3-16cd-4b47-a30e-94ef61d8391d"
+                        icon={AVATARS[sessionInfo?.profilePicture || 1]}
                         name={pairInfo?.name}
                     />
                     <UserHeader
-                        icon="https://i.redd.it/rbbzu2ah8pk61.jpg"
+                        icon={AVATARS[sessionInfo?.buddyProfilePicture || 1]}
                         name={pairInfo?.buddyName}
                     />
                 </View>
@@ -51,9 +50,9 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
                     },
                 ]}
             >
-                <Text
-                    style={styles.levelText}
-                >{`LEVEL ${pairInfo!.experienceLevel}`}</Text>
+                <Text style={styles.levelText}>{`LEVEL ${
+                    pairInfo!.experienceLevel
+                }`}</Text>
                 <Surface style={styles.experienceBarBackground}>
                     <View
                         style={{
@@ -69,9 +68,9 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
                         }}
                     ></View>
                 </Surface>
-                <Text
-                    style={styles.levelText}
-                >{`${pairInfo!.experience}/${pairInfo!.experienceRequired} XP`}</Text>
+                <Text style={styles.levelText}>{`${pairInfo!.experience}/${
+                    pairInfo!.experienceRequired
+                } XP`}</Text>
             </Surface>
         </View>
     );

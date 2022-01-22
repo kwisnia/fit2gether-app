@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import {
@@ -6,6 +7,7 @@ import {
     TextInput,
     Portal,
     Modal,
+    Avatar,
 } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Task as TaskType } from "../../types/Task";
@@ -18,6 +20,8 @@ import CompletedModalContent from "./CompletedModalContent";
 import DurationModalContent from "./DurationModalContent";
 import axios, { AxiosResponse } from "axios";
 import { TaskCompleteDetails } from "../../types/TaskCompleteDetails";
+import { AVATARS } from "../settings/avatars";
+import { SessionContext } from "../../context/SessionContext";
 dayjs.extend(customParseFormat);
 
 const Task: React.FunctionComponent<{
@@ -27,6 +31,7 @@ const Task: React.FunctionComponent<{
     refresh: () => Promise<void>;
 }> = ({ task, categories, userId, refresh }) => {
     const [isFocused, setIsFocused] = React.useState(false);
+    const [sessionInfo] = React.useContext(SessionContext);
     const [completedModalVisible, setCompletedModalVisible] =
         React.useState(false);
     const [durationModalVisible, setDurationModalVisible] =
@@ -82,7 +87,13 @@ const Task: React.FunctionComponent<{
                     />
                 </Modal>
             </Portal>
-            <Pressable onPress={() => setIsFocused(!isFocused)}>
+            <Pressable
+                onPress={() =>
+                    task.userId === sessionInfo?.id
+                        ? setIsFocused(!isFocused)
+                        : null
+                }
+            >
                 <Surface
                     style={[
                         styles.container,
@@ -93,11 +104,16 @@ const Task: React.FunctionComponent<{
                         },
                     ]}
                 >
-                    <MaterialCommunityIcons
-                        name="account-outline"
-                        color={task.userId === 2 ? "#C4D149" : "#EDD3CE"}
+                    <Avatar.Image
                         size={40}
-                    />
+                        source={
+                            AVATARS[
+                                task.userId === sessionInfo?.id
+                                    ? sessionInfo?.profilePicture || 1
+                                    : sessionInfo?.buddyProfilePicture || 1
+                            ]
+                        }
+                    ></Avatar.Image>
                     <Text style={styles.taskTitle}>{task.name}</Text>
                 </Surface>
             </Pressable>

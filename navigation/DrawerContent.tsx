@@ -16,6 +16,7 @@ import { SessionContext } from "../context/SessionContext";
 import RNPickerSelect from "react-native-picker-select";
 import { PairInfo } from "../types/PairInfo";
 import axios, { AxiosResponse } from "axios";
+import { AVATARS } from "../components/settings/avatars";
 
 const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     props
@@ -68,9 +69,8 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                 <View style={styles.userInfoSection}>
                     <Avatar.Image
                         size={50}
-                        source={{
-                            uri: "https://cdn.discordapp.com/attachments/694564497662148679/915549066878922762/unknown.png",
-                        }}
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        source={AVATARS[sessionInfo?.profilePicture || 1]}
                     ></Avatar.Image>
                     <Title
                         style={{

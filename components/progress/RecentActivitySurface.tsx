@@ -1,22 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Surface, Avatar, useTheme } from "react-native-paper";
 import { RecentActivity } from "../../types/PairInfo";
 import dayjs from "dayjs";
+import { AVATARS } from "../settings/avatars";
+import { SessionContext } from "../../context/SessionContext";
 
-const Task: React.FunctionComponent<{ activity: RecentActivity}> = ({
+const Task: React.FunctionComponent<{ activity: RecentActivity }> = ({
     activity,
 }) => {
+    const [sessionInfo] = React.useContext(SessionContext);
     return (
         <Surface style={styles.taskContainer}>
             <Avatar.Image
                 size={40}
-                source={{
-                    uri:
-                        Math.random() > 0.5
-                            ? "https://i.redd.it/rbbzu2ah8pk61.jpg"
-                            : "https://static.wikia.nocookie.net/7f013cd3-16cd-4b47-a30e-94ef61d8391d",
-                }}
+                source={
+                    AVATARS[
+                        activity.userId === sessionInfo?.id
+                            ? sessionInfo?.profilePicture || 1
+                            : sessionInfo?.buddyProfilePicture || 1
+                    ]
+                }
             ></Avatar.Image>
             <View style={styles.taskTextContainer}>
                 <Text style={styles.taskText}>{activity?.name}</Text>

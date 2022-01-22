@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { Appbar, Avatar } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { SessionContext } from "../context/SessionContext";
+import { AVATARS } from "./settings/avatars";
 
 type DrawerNavigationProp = {
     openDrawer: () => void;
@@ -10,6 +13,7 @@ type DrawerNavigationProp = {
 
 const NavAppBar: React.FunctionComponent<{ title: string }> = ({ title }) => {
     const navigation = useNavigation<DrawerNavigationProp>();
+    const [sessionInfo] = React.useContext(SessionContext);
 
     return (
         <Appbar.Header>
@@ -21,9 +25,7 @@ const NavAppBar: React.FunctionComponent<{ title: string }> = ({ title }) => {
             >
                 <Avatar.Image
                     size={50}
-                    source={{
-                        uri: "https://cdn.discordapp.com/attachments/694564497662148679/915549066878922762/unknown.png",
-                    }}
+                    source={AVATARS[sessionInfo?.profilePicture || 1]}
                 ></Avatar.Image>
             </TouchableOpacity>
             <Appbar.Content

@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import {
     useTheme,
     Surface,
     ActivityIndicator,
+    Avatar,
 } from "react-native-paper";
 import { View, Text, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Task } from "../../types/Task";
+import { AVATARS } from "../settings/avatars";
+import { SessionContext } from "../../context/SessionContext";
 
 interface DayTasksProps {
     selectedDate: string;
@@ -20,6 +24,7 @@ const DayTasks: React.FunctionComponent<DayTasksProps> = ({
     isLoading,
 }) => {
     const theme = useTheme();
+    const [sessionInfo] = React.useContext(SessionContext);
 
     return (
         <View>
@@ -61,12 +66,19 @@ const DayTasks: React.FunctionComponent<DayTasksProps> = ({
                             ]}
                         >
                             <View style={styles.contentContainer}>
-                                <MaterialCommunityIcons
-                                    name="account-outline"
-                                    color={theme.colors.accentDark}
-                                    size={36}
+                                <Avatar.Image
                                     style={styles.icon}
-                                />
+                                    size={40}
+                                    source={
+                                        AVATARS[
+                                            task.userId === sessionInfo?.id
+                                                ? sessionInfo?.profilePicture ||
+                                                  1
+                                                : sessionInfo?.buddyProfilePicture ||
+                                                  1
+                                        ]
+                                    }
+                                ></Avatar.Image>
                                 <Text style={styles.taskTitle}>
                                     {task.name}
                                 </Text>
@@ -93,6 +105,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         display: "flex",
         flexDirection: "row",
+        alignItems: "center",
     },
     category: {
         marginVertical: 22,
