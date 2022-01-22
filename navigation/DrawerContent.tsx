@@ -23,7 +23,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
 ) => {
     const { themes, isThemeDark, setTheme } = React.useContext(ThemeContext);
     const theme = useTheme();
-    const { tab } = React.useContext(TabContext);
+    const { tab, setTab } = React.useContext(TabContext);
     const itemStyle = {
         activeTintColor: "white",
         activeBackgroundColor: theme.colors.accent,
@@ -130,6 +130,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                             label="Calendar"
                             focused={tab === "Calendar"}
                             onPress={() => {
+                                setTab("Calendar");
                                 props.navigation.navigate("TabNavigator", {
                                     screen: "Tabs",
                                 });
@@ -147,6 +148,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                             label="Tasks"
                             focused={tab === "Tasks"}
                             onPress={() => {
+                                setTab("Tasks");
                                 props.navigation.navigate("TabNavigator", {
                                     screen: "Tabs",
                                 });
@@ -164,6 +166,7 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                             label="Progress"
                             focused={tab === "Progress"}
                             onPress={() => {
+                                setTab("Progress");
                                 props.navigation.navigate("TabNavigator", {
                                     screen: "Tabs",
                                 });
