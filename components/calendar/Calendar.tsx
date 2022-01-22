@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import React from "react";
 import { Calendar } from "react-native-calendars";
 import { Card, Surface, useTheme } from "react-native-paper";
@@ -22,18 +23,29 @@ interface Dot {
 }
 
 interface MarkedDates {
-    [_: string]: {
+    [date: string]: {
         selected?: boolean;
         dots?: Dot[];
         selectedColor?: string;
     };
 }
 
+const hashCode = (item: string) => {
+    let hash = 0;
+    for (let i = 0; i < item.length; i++) {
+        const character = item.charCodeAt(i);
+        hash = (hash << 5) - hash + character;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+};
+
 const FitCalendar: React.FunctionComponent<CalendarProps> = ({
     selectedDate,
     setSelectedDate,
 }) => {
     const theme = useTheme();
+    const { theme: selectedTheme } = React.useContext(ThemeContext);
     const userDot = React.useMemo(
         () => ({
             key: "user",
@@ -48,6 +60,43 @@ const FitCalendar: React.FunctionComponent<CalendarProps> = ({
         }),
         [theme]
     );
+    const calendarTheme = React.useMemo(
+        () => ({
+            calendarBackground: selectedTheme.colors.primaryLight,
+            selectedDayBackgroundColor: selectedTheme.colors.accentDark,
+            dayTextColor: "white",
+            todayTextColor: "white",
+            textDisabledColor: "#ffc1c1",
+            monthTextColor: "white",
+            textSectionTitleColor: "white",
+            "stylesheet.calendar.header": {
+                headerContainer: {
+                    backgroundColor: selectedTheme.colors.primary,
+                    flexDirection: "row",
+                },
+                header: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginLeft: -5,
+                    marginRight: -5,
+                    alignItems: "center",
+                    backgroundColor: selectedTheme.colors.primary,
+                    paddingLeft: 5,
+                    paddingRight: 5,
+                },
+            },
+            "stylesheet.day.basic": {
+                today: {},
+                selected: {
+                    elevation: 10,
+                    borderRadius: 5,
+                    backgroundColor: selectedTheme.colors.accentDark,
+                    color: "white",
+                },
+            },
+        }),
+        [selectedTheme]
+    );
     const [daysWithTasks, setDaysWithTasks] = React.useState<MarkedDates>({});
     const fetchDaysWithTasks = React.useCallback(
         async (dateStr?: string) => {
@@ -60,22 +109,18 @@ const FitCalendar: React.FunctionComponent<CalendarProps> = ({
                         dateFrom.toISOString().split("T")[0]
                     }&to=${dateTo.toISOString().split("T")[0]}`
                 );
-                const markedDays: {
-                    [_: string]: { dots: Dot[]; selectedColor: string };
-                } = {};
+                const markedDays: MarkedDates = {};
                 days.data.user.forEach((date) => {
                     markedDays[date] = {
                         dots: [userDot],
-                        selectedColor: theme.colors.accentDark,
                     };
                 });
                 days.data.buddy.forEach((date) => {
                     if (markedDays[date]) {
-                        markedDays[date].dots.push(buddyDot);
+                        markedDays[date].dots?.push(buddyDot);
                     } else {
                         markedDays[date] = {
                             dots: [buddyDot],
-                            selectedColor: theme.colors.accentDark,
                         };
                     }
                 });
@@ -84,7 +129,7 @@ const FitCalendar: React.FunctionComponent<CalendarProps> = ({
                 console.log(err);
             }
         },
-        [buddyDot, userDot, theme]
+        [buddyDot, userDot]
     );
     React.useEffect(() => {
         void fetchDaysWithTasks();
@@ -92,14 +137,14 @@ const FitCalendar: React.FunctionComponent<CalendarProps> = ({
     return (
         <Surface style={{ margin: 10 }}>
             <Calendar
-                key={theme.dark ? "dark" : "light"}
+                key={hashCode(JSON.stringify(selectedTheme))}
                 markingType={"multi-dot"}
                 markedDates={{
+                    ...daysWithTasks,
                     [selectedDate]: {
-                        
+                        ...daysWithTasks[selectedDate],
                         selected: true,
                     },
-                    ...daysWithTasks,
                 }}
                 onDayPress={(date) => setSelectedDate(date.dateString)}
                 firstDay={1}
@@ -121,41 +166,8 @@ const FitCalendar: React.FunctionComponent<CalendarProps> = ({
                 onMonthChange={(month) => {
                     void fetchDaysWithTasks(month.dateString);
                 }}
-                theme={{
-                    calendarBackground: theme.colors.primaryLight,
-                    selectedDayBackgroundColor: theme.colors.accentDark,
-                    dayTextColor: "white",
-                    todayTextColor: "white",
-                    textDisabledColor: "#ffc1c1",
-                    monthTextColor: "white",
-                    textSectionTitleColor: "white",
-                    "stylesheet.calendar.header": {
-                        //@ts-expect-error Types are bad
-                        headerContainer: {
-                            backgroundColor: theme.colors.primary,
-                            flexDirection: "row",
-                        },
-                        header: {
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            marginLeft: -5,
-                            marginRight: -5,
-                            alignItems: "center",
-                            backgroundColor: theme.colors.primary,
-                            paddingLeft: 5,
-                            paddingRight: 5,
-                        },
-                    },
-                    "stylesheet.day.basic": {
-                        today: {},
-                        selected: {
-                            elevation: 10,
-                            borderRadius: 5,
-                            backgroundColor: theme.colors.accentDark,
-                            color: "white",
-                        },
-                    },
-                }}
+                // @ts-expect-error Types are bad
+                theme={calendarTheme}
             />
         </Surface>
     );
