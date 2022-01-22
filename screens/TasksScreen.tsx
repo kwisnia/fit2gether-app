@@ -30,22 +30,6 @@ const TasksScreen: React.FunctionComponent = () => {
         setRefreshing(false);
     }, []);
 
-    React.useEffect(() => {
-        const fetchPairTasks = async () => {
-            const fetchedCategories: AxiosResponse<CategoryType[]> =
-                await axios.get("/getAllCategories");
-            setCategories(fetchedCategories.data);
-            const fetchedTasks: AxiosResponse<TaskType[]> = await axios.get(
-                "/tasks?status=todo"
-            );
-            setTasks(fetchedTasks.data);
-        };
-        if (isFocused) {
-            setTab("Tasks");
-            void fetchPairTasks();
-        }
-    }, [isFocused, setTab]);
-
     //TODO: make it actually fetch
     // fetchy fetchy
     const requestListRefresh = async () => {
@@ -54,6 +38,22 @@ const TasksScreen: React.FunctionComponent = () => {
         );
         setTasks(fetchedTasks.data);
     };
+
+    React.useEffect(() => {
+        if (isFocused) {
+            setTab("Tasks");
+            void requestListRefresh();
+        }
+    }, [isFocused, setTab]);
+
+    React.useEffect(() => {
+        const fetchCategories = async () => {
+            const fetchedCategories: AxiosResponse<CategoryType[]> =
+                await axios.get("/getAllCategories");
+            setCategories(fetchedCategories.data);
+        };
+        void fetchCategories();
+    }, []);
 
     return (
         <ScrollView

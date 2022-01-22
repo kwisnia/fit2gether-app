@@ -49,7 +49,6 @@ const SettingsScreen = () => {
     }, [isFocused, refreshSessionInfo, setTab]);
 
     React.useEffect(() => {
-        console.log(sessionInfo);
         setUsername(sessionInfo?.username || "");
         setEmail(sessionInfo?.email || "");
         setAvatarId(sessionInfo?.profilePicture || 1);
@@ -64,7 +63,6 @@ const SettingsScreen = () => {
         } = {};
         if (username && email) {
             try {
-                console.log(avatarId);
                 await axios.post("/editProfile", {
                     email,
                     name: username,

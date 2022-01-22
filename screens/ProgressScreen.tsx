@@ -14,7 +14,8 @@ const ProgressScreen = () => {
     /* on wednesdays we wear pink */
     const [pairInfo, setPairInfo] = React.useState<PairInfo | null>(null);
     const isFocused = useIsFocused();
-    const [sessionInfo, refreshSessionInfo] = useContext(SessionContext);
+    const [sessionInfo, refreshSessionInfo, updateSessionInfo] =
+        useContext(SessionContext);
     const [refreshing, setRefreshing] = React.useState(false);
     const { setTab } = React.useContext(TabContext);
 
@@ -37,8 +38,19 @@ const ProgressScreen = () => {
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
         await fetchPairInfo();
+        if (
+            sessionInfo?.buddyProfilePicture !==
+                pairInfo?.buddyProfilePicture &&
+            sessionInfo &&
+            pairInfo
+        ) {
+            updateSessionInfo({
+                ...sessionInfo,
+                buddyProfilePicture: pairInfo?.buddyProfilePicture,
+            });
+        }
         setRefreshing(false);
-    }, []);
+    }, [pairInfo, updateSessionInfo]);
 
     return (
         <ScrollView>

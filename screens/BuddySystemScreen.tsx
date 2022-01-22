@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import axios, { AxiosResponse } from "axios";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { RefreshControl, StyleSheet } from "react-native";
 import QRCodeSurface from "../components/buddy/QRCodeSurface";
 import YourBuddySurface from "../components/buddy/YourBuddySurface";
 import { PairInfo } from "../types/PairInfo";
@@ -11,6 +10,7 @@ import { Camera } from "expo-camera";
 import { ConnectionResponse } from "../types/ConnectionResponse";
 import { SessionContext } from "../context/SessionContext";
 import { TabContext } from "../context/TabContext";
+import { ScrollView } from "react-native-gesture-handler";
 
 const BuddySystemScreen: React.FunctionComponent = () => {
     const [pairInfo, setPairInfo] = React.useState<PairInfo | null>(null);
@@ -20,6 +20,34 @@ const BuddySystemScreen: React.FunctionComponent = () => {
     const [scanning, setScanning] = React.useState(false);
     const [scanned, setScanned] = React.useState(false);
     const { setTab } = React.useContext(TabContext);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        try {
+            const pair: AxiosResponse<PairInfo> = await axios.get("/pairInfo");
+            if (pair.data.buddyName && !pairInfo?.buddyName) {
+                const newToken = await axios.post<{
+                    accessToken: string;
+                    refreshToken: string;
+                }>("/refresh", {
+                    refresh: sessionInfo?.token.refreshToken,
+                });
+                if (sessionInfo) {
+                    updateSessionInfo({
+                        ...sessionInfo,
+                        buddyId: pair.data.buddyId,
+                        buddyProfilePicture: pair.data.buddyProfilePicture,
+                        token: newToken.data,
+                    });
+                }
+                setPairInfo(pair.data);
+            }
+        } catch (err) {
+            () => {};
+        }
+        setRefreshing(false);
+    };
 
     React.useEffect(() => {
         if (sessionInfo?.buddyId) {
@@ -65,7 +93,11 @@ const BuddySystemScreen: React.FunctionComponent = () => {
     };
 
     return (
-        <SafeAreaView>
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             <QRCodeSurface />
             <YourBuddySurface
                 buddy={pairInfo?.buddyName || null}
@@ -80,7 +112,7 @@ const BuddySystemScreen: React.FunctionComponent = () => {
                     style={{ ...StyleSheet.absoluteFillObject, elevation: 999 }}
                 />
             ) : null}
-        </SafeAreaView>
+        </ScrollView>
     );
 };
 

@@ -1,33 +1,16 @@
 /* eslint-disable no-bitwise */
 import React from "react";
 import { Calendar } from "react-native-calendars";
-import { Card, Surface, useTheme } from "react-native-paper";
+import { Surface } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ThemeContext } from "../../context/ThemeContext";
-import dayjs from "dayjs";
-import axios, { AxiosResponse } from "axios";
+import { MarkedDates } from "../../types/CalendarTypes";
 
 interface CalendarProps {
     selectedDate: string;
     setSelectedDate: (newDate: string) => void;
-}
-
-interface DaysWithTasks {
-    user: string[];
-    buddy: string[];
-}
-
-interface Dot {
-    key: string;
-    color: string;
-}
-
-interface MarkedDates {
-    [date: string]: {
-        selected?: boolean;
-        dots?: Dot[];
-        selectedColor?: string;
-    };
+    fetchDaysWithTasks: (dateStr?: string) => void;
+    daysWithTasks: MarkedDates;
 }
 
 const hashCode = (item: string) => {
@@ -43,23 +26,10 @@ const hashCode = (item: string) => {
 const FitCalendar: React.FunctionComponent<CalendarProps> = ({
     selectedDate,
     setSelectedDate,
+    fetchDaysWithTasks,
+    daysWithTasks,
 }) => {
-    const theme = useTheme();
     const { theme: selectedTheme } = React.useContext(ThemeContext);
-    const userDot = React.useMemo(
-        () => ({
-            key: "user",
-            color: theme.colors.surface,
-        }),
-        [theme]
-    );
-    const buddyDot = React.useMemo(
-        () => ({
-            key: "buddy",
-            color: theme.colors.accent,
-        }),
-        [theme]
-    );
     const calendarTheme = React.useMemo(
         () => ({
             calendarBackground: selectedTheme.colors.primaryLight,
@@ -97,40 +67,7 @@ const FitCalendar: React.FunctionComponent<CalendarProps> = ({
         }),
         [selectedTheme]
     );
-    const [daysWithTasks, setDaysWithTasks] = React.useState<MarkedDates>({});
-    const fetchDaysWithTasks = React.useCallback(
-        async (dateStr?: string) => {
-            const date = dayjs(dateStr);
-            const dateFrom = date.date(1);
-            const dateTo = date.date(date.daysInMonth()).hour(23);
-            try {
-                const days: AxiosResponse<DaysWithTasks> = await axios.get(
-                    `/getDaysWithTasks?from=${
-                        dateFrom.toISOString().split("T")[0]
-                    }&to=${dateTo.toISOString().split("T")[0]}`
-                );
-                const markedDays: MarkedDates = {};
-                days.data.user.forEach((date) => {
-                    markedDays[date] = {
-                        dots: [userDot],
-                    };
-                });
-                days.data.buddy.forEach((date) => {
-                    if (markedDays[date]) {
-                        markedDays[date].dots?.push(buddyDot);
-                    } else {
-                        markedDays[date] = {
-                            dots: [buddyDot],
-                        };
-                    }
-                });
-                setDaysWithTasks(markedDays);
-            } catch (err) {
-                console.log(err);
-            }
-        },
-        [buddyDot, userDot]
-    );
+
     React.useEffect(() => {
         void fetchDaysWithTasks();
     }, [fetchDaysWithTasks]);

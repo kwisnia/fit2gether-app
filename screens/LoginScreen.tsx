@@ -51,7 +51,6 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
                 email,
                 password,
             });
-            console.log(sessionInfo);
             updateSessionInfo({
                 ...sessionInfo,
                 ...res.data,
