@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { StyleSheet, Text, FlatList, Pressable } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { Surface, useTheme, Avatar } from "react-native-paper";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Surface, Avatar } from "react-native-paper";
 import { AVATARS } from "./avatars";
 
 const AvatarPicker: React.FunctionComponent<{
     setAvatarId: (value: number) => void;
     dismiss: () => void;
 }> = ({ setAvatarId, dismiss }) => {
-    const theme = useTheme();
     return (
         <Surface style={styles.container}>
             <Text style={styles.text}>Pick your Avatar:</Text>
