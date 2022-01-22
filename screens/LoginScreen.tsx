@@ -29,15 +29,15 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     const theme = useTheme();
     const [, setIsWaiting] = React.useState(false);
     const [formType, setFormType] = React.useState<formType>("login");
-    const [session, , updateSessionInfo] = useContext(SessionContext);
+    const [sessionInfo, , updateSessionInfo] = useContext(SessionContext);
     const [errorMessage, setErrorMessage] = React.useState("");
 
     React.useEffect(() => {
-        if (session) {
+        if (sessionInfo) {
             setIsWaiting(false);
             navigation.navigate("MainApp", {});
         }
-    }, [session, navigation]);
+    }, [sessionInfo, navigation]);
 
     React.useEffect(() => {
         setErrorMessage("");
@@ -51,7 +51,11 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
                 email,
                 password,
             });
-            updateSessionInfo(res.data);
+            console.log(sessionInfo);
+            updateSessionInfo({
+                ...sessionInfo,
+                ...res.data,
+            });
         } catch (err) {
             const { response } = err as AxiosError<{ message: string }>;
             if (response?.status === 404) {
@@ -79,7 +83,7 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
                         password2: repeatInputPassword,
                     }
                 );
-                updateSessionInfo(res.data);
+                updateSessionInfo({ ...res.data, selectedTheme: "Default" });
             }
         } catch (err) {
             const { response } = err as AxiosError<{ message: string }>;

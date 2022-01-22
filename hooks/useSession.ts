@@ -6,11 +6,13 @@ import { SessionInfo } from "../types/SessionInfo";
 const useSession = (): [
     SessionInfo | null,
     () => void,
-    (_: SessionInfo) => void
+    (_: SessionInfo) => void,
+    boolean
 ] => {
     const [sessionInfo, setSessionInfo] = React.useState<SessionInfo | null>(
         null
     );
+    const [isInitialLoading, setIsInitialLoading] = React.useState(true);
     const getFromStorage = React.useCallback(async () => {
         const result = await SecureStore.getItemAsync("session");
         if (result !== null) {
@@ -22,7 +24,10 @@ const useSession = (): [
         }
     }, []);
     React.useEffect(() => {
-        void getFromStorage();
+        void (async () => {
+            await getFromStorage();
+            setTimeout(() => setIsInitialLoading(false), 1000);
+        })();
     }, [getFromStorage]);
 
     const refreshSessionInfo = React.useCallback(
@@ -38,7 +43,7 @@ const useSession = (): [
         [refreshSessionInfo]
     );
 
-    return [sessionInfo, refreshSessionInfo, updateSession];
+    return [sessionInfo, refreshSessionInfo, updateSession, isInitialLoading];
 };
 
 export default useSession;

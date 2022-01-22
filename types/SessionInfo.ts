@@ -10,4 +10,5 @@ export interface SessionInfo {
     inviteCode: string;
     username: string;
     email: string;
+    selectedTheme: string;
 }

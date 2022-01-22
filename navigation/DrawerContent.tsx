@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, BackHandler } from "react-native";
 import {
     DrawerItem,
     DrawerContentScrollView,
     DrawerContentComponentProps,
+    useDrawerStatus,
 } from "@react-navigation/drawer";
 import { Avatar, Title, Caption, Drawer, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -13,13 +14,15 @@ import * as SecureStore from "expo-secure-store";
 import { useIsFocused } from "@react-navigation/native";
 import { SessionContext } from "../context/SessionContext";
 import RNPickerSelect from "react-native-picker-select";
+import { PairInfo } from "../types/PairInfo";
+import axios, { AxiosResponse } from "axios";
 
 const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     props
 ) => {
     const { themes, isThemeDark, setTheme } = React.useContext(ThemeContext);
     const theme = useTheme();
-    const { tab: active, setTab: setActive } = React.useContext(TabContext);
+    const { tab } = React.useContext(TabContext);
     const itemStyle = {
         activeTintColor: "white",
         activeBackgroundColor: theme.colors.accent,
@@ -27,12 +30,31 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
     };
     const [sessionInfo, refreshSessionInfo] = useContext(SessionContext);
     const isFocused = useIsFocused();
+    const [pairInfo, setPairInfo] = React.useState<PairInfo | null>(null);
+    const [pickerValue, setPickerValue] = React.useState(
+        sessionInfo?.selectedTheme
+    );
+    const isDrawerOpen = useDrawerStatus() === "open";
 
+    const fetchPairInfo = async () => {
+        const pair: AxiosResponse<PairInfo> = await axios.get("/pairInfo");
+        setPairInfo(pair.data);
+    };
     React.useEffect(() => {
         if (isFocused) {
             refreshSessionInfo();
         }
     }, [isFocused, refreshSessionInfo]);
+
+    React.useEffect(() => {
+        void fetchPairInfo();
+    }, [sessionInfo]);
+
+    React.useEffect(() => {
+        if (isDrawerOpen) {
+            void fetchPairInfo();
+        }
+    }, [isDrawerOpen]);
 
     const logout = async () => {
         await SecureStore.deleteItemAsync("session");
@@ -88,9 +110,8 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                         />
                     )}
                     label="Buddy system"
-                    focused={active === "Buddy System"}
+                    focused={tab === "Buddy System"}
                     onPress={() => {
-                        setActive("Buddy System");
                         props.navigation.navigate("Buddy");
                     }}
                     labelStyle={styles.drawerItem}
@@ -107,9 +128,8 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                                 />
                             )}
                             label="Calendar"
-                            focused={active === "Calendar"}
+                            focused={tab === "Calendar"}
                             onPress={() => {
-                                setActive("Calendar");
                                 props.navigation.navigate("TabNavigator", {
                                     screen: "Tabs",
                                 });
@@ -125,9 +145,8 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                                 />
                             )}
                             label="Tasks"
-                            focused={active === "Tasks"}
+                            focused={tab === "Tasks"}
                             onPress={() => {
-                                setActive("Tasks");
                                 props.navigation.navigate("TabNavigator", {
                                     screen: "Tabs",
                                 });
@@ -143,9 +162,8 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                                 />
                             )}
                             label="Progress"
-                            focused={active === "Progress"}
+                            focused={tab === "Progress"}
                             onPress={() => {
-                                setActive("Progress");
                                 props.navigation.navigate("TabNavigator", {
                                     screen: "Tabs",
                                 });
@@ -165,12 +183,24 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                 <RNPickerSelect
                     onValueChange={(value: string) => {
                         setTheme(value);
+                        setPickerValue(value);
                     }}
+                    value={pickerValue}
                     placeholder={{}}
-                    items={themes.map((theme) => ({
-                        value: theme.name,
-                        label: theme.name,
-                    }))}
+                    items={themes
+                        .slice(
+                            0,
+                            1 +
+                                Math.floor(
+                                    (pairInfo &&
+                                        pairInfo?.experienceLevel / 3) ||
+                                        1
+                                )
+                        )
+                        .map((theme) => ({
+                            value: theme.name,
+                            label: theme.name,
+                        }))}
                 >
                     <DrawerItem
                         icon={({ color, size }) => (
@@ -195,7 +225,6 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     )}
                     label="Settings"
                     onPress={() => {
-                        setActive("Settings");
                         props.navigation.navigate("TabNavigator", {
                             screen: "Settings",
                         });
@@ -203,6 +232,10 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     {...itemStyle}
                 />
                 <DrawerItem label="Logout" onPress={logout} />
+                <DrawerItem
+                    label="NFT Metaverse"
+                    onPress={() => BackHandler.exitApp()}
+                />
             </Drawer.Section>
         </DrawerContentScrollView>
     );

@@ -6,14 +6,6 @@ import {
     ActivityIndicator,
     Provider as PaperProvider,
 } from "react-native-paper";
-import {
-    combinedDefaultTheme,
-    combinedDarkTheme,
-    combinedLightPinkTheme,
-    combinedDarkPineTheme,
-    combinedLightBoyWhoLivedTheme,
-    combinedLightPowderTheme,
-} from "./styles/theme";
 import { ThemeContext } from "./context/ThemeContext";
 import { TabContext } from "./context/TabContext";
 import DrawerNavigator from "./navigation/DrawerNavigation";
@@ -34,16 +26,22 @@ const App = () => {
     const [theme, themes, isThemeDark, setTheme] = useThemeSwitcher();
     const [tab, setTab] = React.useState("Calendar");
     const [initialRouteName, setInitialRouteName] = React.useState("");
-    const [sessionInfo, refreshSessionInfo, updateSession] = useSession();
+    const [sessionInfo, refreshSessionInfo, updateSession, isInitialLoading] =
+        useSession();
+
+    React.useEffect(() => {
+        setInitialRouteName(sessionInfo ? "MainApp" : "Login");
+    }, [sessionInfo]);
 
     React.useEffect(() => {
         if (sessionInfo) {
-            setInitialRouteName("MainApp");
-        } else {
-            setInitialRouteName("Login");
+            updateSession({
+                ...sessionInfo,
+                selectedTheme:
+                    themes.find((e) => e.theme === theme)?.name || "Default",
+            });
         }
-        setTab(sessionInfo?.buddyId ? "Calendar" : "Buddy System");
-    }, [sessionInfo]);
+    }, [theme, themes, updateSession, sessionInfo?.id]);
 
     return (
         <SafeAreaProvider>
@@ -60,7 +58,9 @@ const App = () => {
                         value={[sessionInfo, refreshSessionInfo, updateSession]}
                     >
                         <PaperProvider theme={theme}>
-                            {initialRouteName ? (
+                            {isInitialLoading ? (
+                                <ActivityIndicator />
+                            ) : initialRouteName ? (
                                 <NavigationContainer theme={theme}>
                                     <Stack.Navigator
                                         screenOptions={{

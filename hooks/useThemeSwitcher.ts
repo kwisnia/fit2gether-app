@@ -8,6 +8,7 @@ import {
     combinedLightPowderTheme,
 } from "../styles/theme";
 import { Theme } from "../types/Theme";
+import useSession from "./useSession";
 
 const useThemeSwitcher = (): [
     typeof combinedDefaultTheme,
@@ -56,13 +57,26 @@ const useThemeSwitcher = (): [
         ],
         []
     );
+    const [session] = useSession();
 
-    const [theme, setSelectedTheme] = React.useState(combinedDefaultTheme);
+    const [theme, setSelectedTheme] = React.useState(
+        session
+            ? themes.find((theme) => theme.name === session.selectedTheme)
+                ?.theme || combinedDefaultTheme
+            : combinedDefaultTheme
+    );
     const [isThemeDark, setIsThemeDark] = React.useState(false);
 
     React.useEffect(() => {
         setIsThemeDark(themes.find((e) => e.theme === theme)?.isDark || false);
     }, [theme, themes]);
+
+    React.useEffect(() => {
+        setSelectedTheme(
+            themes.find((theme) => theme.name === session?.selectedTheme)
+                ?.theme || combinedDefaultTheme
+        );
+    }, [session, themes]);
 
     const setTheme = React.useCallback(
         (name: string) => {
