@@ -17,6 +17,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import useSession from "./hooks/useSession";
 import { SessionContext } from "./context/SessionContext";
 import useThemeSwitcher from "./hooks/useThemeSwitcher";
+import SplashScreen from "./screens/SplashScreen";
 
 registerTranslation("en-GB", enGB);
 axios.defaults.baseURL = "https://fit2gether-api.herokuapp.com";
@@ -59,7 +60,7 @@ const App = () => {
                     >
                         <PaperProvider theme={theme}>
                             {isInitialLoading ? (
-                                <ActivityIndicator />
+                                <SplashScreen />
                             ) : initialRouteName ? (
                                 <NavigationContainer theme={theme}>
                                     <Stack.Navigator

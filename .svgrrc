@@ -1,0 +1,6 @@
+{
+    "replaceAttrValues": {
+        "#000": "{props.fillPrimary}",
+        "#001": "{props.fillAccent}"
+    }
+}

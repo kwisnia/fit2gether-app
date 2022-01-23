@@ -7,7 +7,6 @@ import axios, { AxiosResponse } from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import { SessionContext } from "../context/SessionContext";
-import { TabContext } from "../context/TabContext";
 
 const ProgressScreen = () => {
     //TODO: make it fetch *happy Gretchen noises*
@@ -17,7 +16,6 @@ const ProgressScreen = () => {
     const [sessionInfo, refreshSessionInfo, updateSessionInfo] =
         useContext(SessionContext);
     const [refreshing, setRefreshing] = React.useState(false);
-    const { setTab } = React.useContext(TabContext);
 
     const fetchPairInfo = async () => {
         const pair: AxiosResponse<PairInfo> = await axios.get("/pairInfo");
@@ -31,9 +29,8 @@ const ProgressScreen = () => {
         if (isFocused) {
             refreshSessionInfo();
             void fetchPairInfo();
-            setTab("Progress");
         }
-    }, [isFocused, refreshSessionInfo, setTab]);
+    }, [isFocused, refreshSessionInfo]);
 
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);

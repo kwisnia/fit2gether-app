@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import {
     StyleSheet,
     View,
-    Image,
     Text,
     ScrollView,
     KeyboardAvoidingView,
@@ -17,6 +16,8 @@ import RegisterSurface from "../components/login/RegisterSurface";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { SessionInfo } from "../types/SessionInfo";
 import { SessionContext } from "../context/SessionContext";
+import Logo from "../assets/f2g_splash.svg";
+import { ThemeContext } from "../context/ThemeContext";
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
     RootStackParamList,
@@ -27,6 +28,7 @@ type formType = "login" | "register";
 
 const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     const theme = useTheme();
+    const { isThemeDark } = React.useContext(ThemeContext);
     const [, setIsWaiting] = React.useState(false);
     const [formType, setFormType] = React.useState<formType>("login");
     const [sessionInfo, , updateSessionInfo] = useContext(SessionContext);
@@ -100,13 +102,23 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
             <View style={{ height: 64 }} />
             <ScrollView>
                 <View style={styles.logoContainer}>
-                    <Image
-                        style={styles.logo}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                        source={require("../assets/f2g_logo.png")}
+                    <Logo
+                        fillPrimary={theme.colors.primary}
+                        fillAccent={theme.colors.accent}
+                        height={200}
+                        width={210}
                     />
                 </View>
-                <Text style={styles.title}>Fit2Gether</Text>
+                <Text
+                    style={[
+                        styles.title,
+                        {
+                            color: isThemeDark ? "white" : "black",
+                        },
+                    ]}
+                >
+                    Fit2Gether
+                </Text>
                 <LoginRegisterSelector
                     formType={formType}
                     setFormType={setFormType}

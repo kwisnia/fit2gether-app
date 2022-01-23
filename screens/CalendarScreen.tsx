@@ -82,7 +82,6 @@ const CalendarScreen: React.FunctionComponent = () => {
         if (isFocused) {
             setIsLoading(true);
             void fetchSelectedDayTasks();
-            setTab("Calendar");
         }
     }, [selectedDay, isFocused, fetchSelectedDayTasks, setTab]);
 
