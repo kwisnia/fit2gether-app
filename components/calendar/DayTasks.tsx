@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import {
     useTheme,
@@ -85,7 +84,7 @@ const DayTasks: React.FunctionComponent<DayTasksProps> = ({
                             </View>
 
                             <Text style={styles.category}>
-                                {task.category.name}
+                                {task.category.label}
                             </Text>
                         </Surface>
                     ))

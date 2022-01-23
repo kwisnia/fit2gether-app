@@ -1,15 +1,27 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import av1 from "../../assets/avatars/av1.png";
+import av2 from "../../assets/avatars/av2.png";
+import av3 from "../../assets/avatars/av3.png";
+import av4 from "../../assets/avatars/av4.png";
+import av5 from "../../assets/avatars/av5.png";
+import av6 from "../../assets/avatars/av6.png";
+import av7 from "../../assets/avatars/av7.png";
+import av8 from "../../assets/avatars/av8.png";
+import av9 from "../../assets/avatars/av9.png";
+import av10 from "../../assets/avatars/av10.png";
+import av11 from "../../assets/avatars/av11.png";
+import av12 from "../../assets/avatars/av12.png";
+
 export const AVATARS = {
-    1: require("../../assets/avatars/av1.png"),
-    2: require("../../assets/avatars/av2.png"),
-    3: require("../../assets/avatars/av3.png"),
-    4: require("../../assets/avatars/av4.png"),
-    5: require("../../assets/avatars/av5.png"),
-    6: require("../../assets/avatars/av6.png"),
-    7: require("../../assets/avatars/av7.png"),
-    8: require("../../assets/avatars/av8.png"),
-    9: require("../../assets/avatars/av9.png"),
-    10: require("../../assets/avatars/av10.png"),
-    11: require("../../assets/avatars/av11.png"),
-    12: require("../../assets/avatars/av12.png"),
+    1: av1,
+    2: av2,
+    3: av3,
+    4: av4,
+    5: av5,
+    6: av6,
+    7: av7,
+    8: av8,
+    9: av9,
+    10: av10,
+    11: av11,
+    12: av12,
 };

@@ -1,5 +1,4 @@
-const range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
-type Range = typeof range[number];
+import { Range } from "./Range";
 
 export interface SessionInfo {
     id: number;

@@ -1,7 +1,9 @@
+import { Range } from "./Range";
+
 export interface PairInfo {
     name: string;
     buddyId: number;
-    buddyProfilePicture: number;
+    buddyProfilePicture: Range;
     buddyName: string;
     experienceLevel: number;
     experience: number;

@@ -1,11 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { StyleSheet, Text, FlatList, Pressable } from "react-native";
 import { Surface, Avatar } from "react-native-paper";
 import { AVATARS } from "./avatars";
 
+type setAvatarAction = SetStateAction<
+    5 | 1 | 2 | 3 | 4 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+>;
+
 const AvatarPicker: React.FunctionComponent<{
-    setAvatarId: (value: number) => void;
+    setAvatarId: Dispatch<setAvatarAction>;
     dismiss: () => void;
 }> = ({ setAvatarId, dismiss }) => {
     return (
@@ -25,7 +28,9 @@ const AvatarPicker: React.FunctionComponent<{
                             },
                         ]}
                         onPress={() => {
-                            setAvatarId(Number(item.key));
+                            setAvatarId(
+                                Number(item.key) as unknown as setAvatarAction
+                            );
                             dismiss();
                         }}
                     >

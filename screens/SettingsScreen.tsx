@@ -16,6 +16,7 @@ import { TabContext } from "../context/TabContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AVATARS } from "../components/settings/avatars";
 import AvatarPicker from "../components/settings/AvatarPicker";
+import { Range } from "../types/Range";
 
 const SettingsScreen = () => {
     const theme = useTheme();
@@ -27,7 +28,7 @@ const SettingsScreen = () => {
     const [oldPassword, setOldPassword] = React.useState("");
     const [newPassword, setNewPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
-    const [avatarId, setAvatarId] = React.useState(
+    const [avatarId, setAvatarId] = React.useState<Range>(
         sessionInfo?.profilePicture || 1
     );
     const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -59,7 +60,7 @@ const SettingsScreen = () => {
         const updatedData: {
             username?: string;
             email?: string;
-            profilePicture?: number;
+            profilePicture?: Range;
         } = {};
         if (username && email) {
             try {

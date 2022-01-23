@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useTheme, Surface, Avatar } from "react-native-paper";

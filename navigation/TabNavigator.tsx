@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { BottomNavigation, useTheme } from "react-native-paper";
-import { LogBox, Settings } from "react-native";
+import { LogBox } from "react-native";
 import NavAppBar from "../components/NavAppBar";
 import { ThemeContext } from "../context/ThemeContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";

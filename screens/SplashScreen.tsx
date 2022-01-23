@@ -37,7 +37,4 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginVertical: 30,
     },
-    logo: {
-        marginHorizontal: 50,
-    },
 });

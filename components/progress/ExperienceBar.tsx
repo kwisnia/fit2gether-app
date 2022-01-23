@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ImageSourcePropType } from "react-native";
 import { Surface, Avatar, useTheme } from "react-native-paper";
 import { SessionContext } from "../../context/SessionContext";
 import { PairInfo } from "../../types/PairInfo";
 import { AVATARS } from "../settings/avatars";
 
 const UserHeader: React.FunctionComponent<{
-    icon: any;
+    icon: ImageSourcePropType;
     name: string | undefined;
 }> = ({ icon, name }) => {
     return (
@@ -51,7 +50,7 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
                 ]}
             >
                 <Text style={styles.levelText}>{`LEVEL ${
-                    pairInfo!.experienceLevel
+                    pairInfo?.experienceLevel || 1
                 }`}</Text>
                 <Surface style={styles.experienceBarBackground}>
                     <View
@@ -61,15 +60,17 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
                             borderBottomLeftRadius: 50,
                             backgroundColor: theme.colors.accent,
                             width: `${
-                                (pairInfo!.experience /
-                                    pairInfo!.experienceRequired) *
-                                100
+                                pairInfo
+                                    ? (pairInfo.experience /
+                                          pairInfo.experienceRequired) *
+                                      100
+                                    : 0
                             }%`,
                         }}
                     ></View>
                 </Surface>
-                <Text style={styles.levelText}>{`${pairInfo!.experience}/${
-                    pairInfo!.experienceRequired
+                <Text style={styles.levelText}>{`${pairInfo?.experience || 1}/${
+                    pairInfo?.experienceRequired || 100
                 } XP`}</Text>
             </Surface>
         </View>
@@ -106,9 +107,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 50,
         marginVertical: 7,
-    },
-    experienceBarFill: {
-        paddingVertical: 11,
     },
 });
 

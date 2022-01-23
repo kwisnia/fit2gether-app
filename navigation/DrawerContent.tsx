@@ -69,7 +69,6 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                 <View style={styles.userInfoSection}>
                     <Avatar.Image
                         size={50}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                         source={AVATARS[sessionInfo?.profilePicture || 1]}
                     ></Avatar.Image>
                     <Title
@@ -272,18 +271,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginRight: 15,
     },
-    paragraph: {
-        fontWeight: "bold",
-        marginRight: 3,
-    },
     drawerSection: {
         marginTop: 15,
-    },
-    preference: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingVertical: 12,
-        paddingHorizontal: 16,
     },
     drawerItem: {
         fontWeight: "500",

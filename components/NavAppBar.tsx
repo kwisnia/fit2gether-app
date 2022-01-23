@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { Appbar, Avatar } from "react-native-paper";
 import { StyleSheet } from "react-native";
