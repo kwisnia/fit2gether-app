@@ -42,6 +42,7 @@ const App = () => {
                     themes.find((e) => e.theme === theme)?.name || "Default",
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [theme, themes, updateSession, sessionInfo?.id]);
 
     return (
