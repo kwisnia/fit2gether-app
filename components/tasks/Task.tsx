@@ -113,7 +113,17 @@ const Task: React.FunctionComponent<{
                             ]
                         }
                     ></Avatar.Image>
-                    <Text style={styles.taskTitle}>{task.name}</Text>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.taskTitle}>{task.name}</Text>
+                        <Text
+                            style={[
+                                styles.category,
+                                { color: theme.colors.accent },
+                            ]}
+                        >
+                            {task.category.label}
+                        </Text>
+                    </View>
                 </Surface>
             </Pressable>
             {isFocused && task.userId === userId ? (
@@ -299,6 +309,15 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     controls: { flexDirection: "row" },
+    textContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flex: 1,
+    },
+    category: {
+        textTransform: "uppercase",
+    },
 });
 
 export default Task;

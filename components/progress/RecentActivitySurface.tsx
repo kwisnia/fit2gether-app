@@ -10,6 +10,7 @@ const Task: React.FunctionComponent<{ activity: RecentActivity }> = ({
     activity,
 }) => {
     const [sessionInfo] = React.useContext(SessionContext);
+    const theme = useTheme();
     return (
         <Surface style={styles.taskContainer}>
             <Avatar.Image
@@ -24,7 +25,7 @@ const Task: React.FunctionComponent<{ activity: RecentActivity }> = ({
             ></Avatar.Image>
             <View style={styles.taskTextContainer}>
                 <Text style={styles.taskText}>{activity?.name}</Text>
-                <Text style={styles.taskDate}>
+                <Text style={[styles.taskDate, { color: theme.colors.accent }]}>
                     {dayjs(activity?.completionTime).format("DD/MM/YYYY")}
                 </Text>
             </View>
@@ -97,7 +98,6 @@ const styles = StyleSheet.create({
         textAlign: "left",
     },
     taskDate: {
-        color: "white",
         fontWeight: "500",
         fontSize: 16,
         textAlign: "right",

@@ -83,7 +83,12 @@ const DayTasks: React.FunctionComponent<DayTasksProps> = ({
                                 </Text>
                             </View>
 
-                            <Text style={styles.category}>
+                            <Text
+                                style={[
+                                    styles.category,
+                                    { color: theme.colors.accent },
+                                ]}
+                            >
                                 {task.category.label}
                             </Text>
                         </Surface>
@@ -109,7 +114,6 @@ const styles = StyleSheet.create({
     category: {
         marginVertical: 22,
         marginRight: 20,
-        color: "#ffc1c1",
         textTransform: "uppercase",
     },
     icon: {
