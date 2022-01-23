@@ -49,6 +49,20 @@ const Task: React.FunctionComponent<{
         });
     const theme = useTheme();
 
+    const updateTask = async () => {
+        await axios.put(`/task/${task.id}`, {
+            name: title,
+            date,
+            categoryId: category,
+        });
+        void refresh();
+    };
+
+    const deleteTask = async () => {
+        await axios.delete(`/task/${task.id}`);
+        void refresh();
+    };
+
     const getColorBasedOnFocus = (focused: boolean) => {
         return focused ? theme.colors.primary : theme.colors.primaryDark;
     };
@@ -257,14 +271,14 @@ const Task: React.FunctionComponent<{
                             </Pressable>
                         </View>
                         <View style={styles.controls}>
-                            <Pressable>
+                            <Pressable onPress={updateTask}>
                                 <MaterialCommunityIcons
                                     name="content-save"
                                     color={theme.colors.primaryDark}
                                     size={40}
                                 />
                             </Pressable>
-                            <Pressable>
+                            <Pressable onPress={deleteTask}>
                                 <MaterialCommunityIcons
                                     name="delete-forever"
                                     color={theme.colors.accentDark}
