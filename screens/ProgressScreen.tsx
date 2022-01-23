@@ -51,16 +51,13 @@ const ProgressScreen = () => {
     }, [pairInfo, updateSessionInfo]);
 
     return (
-        <ScrollView>
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             {pairInfo ? (
-                <ScrollView
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                >
+                <ScrollView>
                     <ExperienceBar pairInfo={pairInfo} />
                     <RecentActivitySurface
                         activities={pairInfo.recentActivities}
