@@ -56,6 +56,7 @@ const Task: React.FunctionComponent<{
             categoryId: category,
         });
         void refresh();
+        setIsFocused(false);
     };
 
     const deleteTask = async () => {

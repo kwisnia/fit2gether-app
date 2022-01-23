@@ -1,4 +1,3 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useContext } from "react";
 import {
     StyleSheet,
@@ -8,7 +7,6 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from "react-native";
-import { RootStackParamList } from "../types/RootStackParamList";
 import { useTheme, Surface } from "react-native-paper";
 import LoginSurface from "../components/login/LoginSurface";
 import LoginRegisterSelector from "../components/login/LoginRegisterSelector";
@@ -19,14 +17,9 @@ import { SessionContext } from "../context/SessionContext";
 import Logo from "../assets/f2g_splash.svg";
 import { ThemeContext } from "../context/ThemeContext";
 
-type LoginScreenNavigationProp = NativeStackScreenProps<
-    RootStackParamList,
-    "Login"
->;
-
 type formType = "login" | "register";
 
-const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
+const LoginScreen = () => {
     const theme = useTheme();
     const { isThemeDark } = React.useContext(ThemeContext);
     const [, setIsWaiting] = React.useState(false);
@@ -37,9 +30,8 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
     React.useEffect(() => {
         if (sessionInfo) {
             setIsWaiting(false);
-            navigation.navigate("MainApp", {});
         }
-    }, [sessionInfo, navigation]);
+    }, [sessionInfo]);
 
     React.useEffect(() => {
         setErrorMessage("");
@@ -96,7 +88,12 @@ const LoginScreen = ({ navigation }: LoginScreenNavigationProp) => {
 
     return (
         <KeyboardAvoidingView
-            style={styles.container}
+            style={[
+                styles.container,
+                {
+                    backgroundColor: theme.colors.background,
+                },
+            ]}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
             <View style={{ height: 64 }} />

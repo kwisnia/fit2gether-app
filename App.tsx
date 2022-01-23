@@ -18,6 +18,7 @@ import useSession from "./hooks/useSession";
 import { SessionContext } from "./context/SessionContext";
 import useThemeSwitcher from "./hooks/useThemeSwitcher";
 import SplashScreen from "./screens/SplashScreen";
+import { StatusBar } from "expo-status-bar";
 
 registerTranslation("en-GB", enGB);
 axios.defaults.baseURL = "https://fit2gether-api.herokuapp.com";
@@ -64,23 +65,19 @@ const App = () => {
                                 <SplashScreen />
                             ) : initialRouteName ? (
                                 <NavigationContainer theme={theme}>
-                                    <Stack.Navigator
-                                        screenOptions={{
-                                            headerShown: false,
-                                        }}
-                                        initialRouteName={initialRouteName}
-                                    >
-                                        <Stack.Screen
-                                            name="Login"
-                                            component={LoginScreen}
-                                        />
-                                        {sessionInfo ? (
-                                            <Stack.Screen
-                                                name="MainApp"
-                                                component={DrawerNavigator}
-                                            />
-                                        ) : null}
-                                    </Stack.Navigator>
+                                    <StatusBar
+                                        style={isThemeDark ? "light" : "dark"}
+                                        backgroundColor={
+                                            isThemeDark
+                                                ? theme.colors.primaryDark
+                                                : theme.colors.primary
+                                        }
+                                    />
+                                    {sessionInfo ? (
+                                        <DrawerNavigator />
+                                    ) : (
+                                        <LoginScreen />
+                                    )}
                                 </NavigationContainer>
                             ) : (
                                 <ActivityIndicator />

@@ -61,7 +61,6 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
         await SecureStore.deleteItemAsync("session");
         refreshSessionInfo();
         props.navigation.closeDrawer();
-        props.navigation.navigate("Login");
     };
     return (
         <DrawerContentScrollView {...props}>
