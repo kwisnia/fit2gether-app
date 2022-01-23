@@ -11,7 +11,6 @@ import { TabContext } from "./context/TabContext";
 import DrawerNavigator from "./navigation/DrawerNavigation";
 import { enGB, registerTranslation } from "react-native-paper-dates";
 import axios from "axios";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import useSession from "./hooks/useSession";
@@ -24,7 +23,6 @@ registerTranslation("en-GB", enGB);
 axios.defaults.baseURL = "https://fit2gether-api.herokuapp.com";
 
 const App = () => {
-    const Stack = createNativeStackNavigator();
     const [theme, themes, isThemeDark, setTheme] = useThemeSwitcher();
     const [tab, setTab] = React.useState("Calendar");
     const [initialRouteName, setInitialRouteName] = React.useState("");
