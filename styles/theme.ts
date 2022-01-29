@@ -45,7 +45,7 @@ export const combinedDarkTheme = {
         ...NavigationDarkTheme.colors,
         primary: "#241A15",
         primaryLight: "#1F1714",
-        primaryDark: "#301F16",
+        primaryDark: "#402b21",
         accent: "#da4167",
         accentLight: "#a3003d",
         accentDark: "#ff7595",
@@ -69,7 +69,7 @@ export const combinedLightPinkTheme = {
         accentDark: "#002F10",
         //Not sure about those two
         surface: "#C1778C",
-        background: "#FFD9EE",
+        background: "#FCE1F0",
     },
 };
 

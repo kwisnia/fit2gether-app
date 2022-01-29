@@ -133,7 +133,7 @@ const Task: React.FunctionComponent<{
                         <Text
                             style={[
                                 styles.category,
-                                { color: theme.colors.accent },
+                                { color: theme.colors.accentDark },
                             ]}
                         >
                             {task.category.label}

@@ -49,9 +49,16 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
                     },
                 ]}
             >
-                <Text style={styles.levelText}>{`LEVEL ${
-                    pairInfo?.experienceLevel || 1
-                }`}</Text>
+                <Text
+                    style={[
+                        styles.levelText,
+                        {
+                            color: theme.dark
+                                ? "white"
+                                : theme.colors.primaryDark,
+                        },
+                    ]}
+                >{`LEVEL ${pairInfo?.experienceLevel || 1}`}</Text>
                 <Surface style={styles.experienceBarBackground}>
                     <View
                         style={{
@@ -69,9 +76,18 @@ const ExperienceBar: React.FunctionComponent<{ pairInfo: PairInfo | null }> = ({
                         }}
                     ></View>
                 </Surface>
-                <Text style={styles.levelText}>{`${pairInfo?.experience || 1}/${
-                    pairInfo?.experienceRequired || 100
-                } XP`}</Text>
+                <Text
+                    style={[
+                        styles.levelText,
+                        {
+                            color: theme.dark
+                                ? "white"
+                                : theme.colors.primaryDark,
+                        },
+                    ]}
+                >{`${pairInfo?.experience || 1}/${
+                        pairInfo?.experienceRequired || 100
+                    } XP`}</Text>
             </Surface>
         </View>
     );
@@ -97,7 +113,6 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     levelText: {
-        color: "white",
         fontWeight: "500",
         fontSize: 22,
         marginVertical: 10,

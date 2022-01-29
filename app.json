@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fit2Gether",
     "slug": "Fit2Gether",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {

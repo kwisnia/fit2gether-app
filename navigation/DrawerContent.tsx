@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, StyleSheet, BackHandler } from "react-native";
+import { View, StyleSheet } from "react-native";
 import {
     DrawerItem,
     DrawerContentScrollView,
@@ -233,10 +233,6 @@ const DrawerContent: React.FunctionComponent<DrawerContentComponentProps> = (
                     {...itemStyle}
                 />
                 <DrawerItem label="Logout" onPress={logout} />
-                <DrawerItem
-                    label="NFT Metaverse"
-                    onPress={() => BackHandler.exitApp()}
-                />
             </Drawer.Section>
         </DrawerContentScrollView>
     );

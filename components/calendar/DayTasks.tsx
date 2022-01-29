@@ -86,7 +86,7 @@ const DayTasks: React.FunctionComponent<DayTasksProps> = ({
                             <Text
                                 style={[
                                     styles.category,
-                                    { color: theme.colors.accent },
+                                    { color: theme.colors.accentDark },
                                 ]}
                             >
                                 {task.category.label}

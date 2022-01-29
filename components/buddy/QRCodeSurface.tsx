@@ -36,7 +36,16 @@ const QRCodeSurface = () => {
                         size={200}
                     />
                 ) : null}
-                <Text style={styles.buddyText}>
+                <Text
+                    style={[
+                        styles.buddyText,
+                        {
+                            color: theme.dark
+                                ? "white"
+                                : theme.colors.primaryDark,
+                        },
+                    ]}
+                >
                     Show your code to your Buddy or scan theirs to connect
                 </Text>
             </View>
@@ -52,7 +61,6 @@ const styles = StyleSheet.create({
         marginVertical: 17,
     },
     buddyText: {
-        color: "white",
         fontSize: 18,
         textAlign: "center",
         paddingTop: 10,

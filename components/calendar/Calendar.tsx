@@ -34,8 +34,12 @@ const FitCalendar: React.FunctionComponent<CalendarProps> = ({
         () => ({
             calendarBackground: selectedTheme.colors.primaryLight,
             selectedDayBackgroundColor: selectedTheme.colors.accentDark,
-            dayTextColor: "white",
-            todayTextColor: "white",
+            dayTextColor: selectedTheme.dark
+                ? "white"
+                : selectedTheme.colors.primaryDark,
+            todayTextColor: selectedTheme.dark
+                ? "white"
+                : selectedTheme.colors.primaryDark,
             textDisabledColor: "#ffc1c1",
             monthTextColor: "white",
             textSectionTitleColor: "white",
